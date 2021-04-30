@@ -1,0 +1,107 @@
+= Device firmware
+
+The next step is to compile and flash the device's firmware.
+
+== Clone the Git repository
+
+Clone the git repository with the example:
+
+[source]
+----
+git clone https://github.com/drogue-iot/drogue-device-ng
+----
+
+For the next steps, you will need to change into the sub-directory `examples/stm32l0xx/lora-discovery/`:
+
+[source]
+----
+cd examples/stm32l0xx/lora-discovery/
+----
+
+IMPORTANT: If you don't use the "B-L072Z-LRWAN1" board, you will need to adapt the firmware to match your device and
+hardware configuration!
+
+== Update the device configuration
+
+Locate the Device EUI, Application EUI, and Application Key, you created earlier. Add the keys into the following files:
+
+`lora-discovery/config/app_eui.txt`:: The Application EUI
+`lora-discovery/config/dev_eui.txt`:: The Device EUI
+`lora-discovery/config/app_key.txt`:: The Application Key
+
+== Compile and flash
+
+You can now compile and flash the firmware. Execute the following command:
+
+IMPORTANT: You need to have the developer board attached to your computer.
+
+[source]
+----
+cargo run --release
+----
+
+== Checking the result
+
+Once you flashed and started the program, `cargo run` will keep attached to the application running on the development
+board. The output should look something like this:
+
+[source,subs="verbatim,quotes"]
+----
+    Finished release [optimized + debuginfo] target(s) in 1.66s
+     Running `probe-run --chip STM32L072CZ target/thumbv6m-none-eabi/release/lora-discovery`
+  (HOST) INFO  flashing program (73.77 KiB)
+  (HOST) INFO  success!
+────────────────────────────────────────────────────────────────────────────────
+INFO - Configuring with config LoraConfig { region: Some(EU868), lora_mode: Some(WAN), device_address: None, device_eui: Some(EUI([0, 54, 39, 147, 252, 241, 128, 45])), app_eui: Some(EUI([112, 179, 213, 126, 208, 2, 3, 105])), app_key: Some(AppKey([241, 86, 188, 53, 248, 3, 201, 238, 172, 50, 168, 119, 74, 114, 29, 198])) }
+INFO - LoRa driver configured
+TRACE - New Session Request
+TRACE - Event handled
+TRACE - Join Request Sending
+TRACE - Phy event
+TRACE - Event handled
+TRACE - TimeoutRequest: 4500
+TRACE - Event handled
+TRACE - TimeoutRequest: 5300
+TRACE - Phy event
+TRACE - Event handled
+*INFO - Network joined* <1>
+----
+<1> Successfully joined the network
+
+Pay attention to the line indicating that the LoRa network was successfully joined.
+
+== Pressing buttons
+
+You can already give it a try, and press the blue button on the board.
+
+But before you do, open up the web console, navigate to the "Spy", and start it, using the Drogue application
+name you have assigned earlier.
+
+Now you can press the button! This will trigger the device to send some
+information to the LoRa network. There is no one there to receive yet, it should still work.
+
+[source,subs="verbatim,quotes"]
+----
+INFO - Ticked: 1
+*INFO - Sending message...* <1>
+INFO - Message: ping:1
+TRACE - Uplink with FCnt 0
+TRACE - Phy event
+TRACE - Event handled
+TRACE - TimeoutRequest: 4500
+TRACE - Event handled
+TRACE - TimeoutRequest: 5300
+TRACE - Phy event
+TRACE - Event handled
+TRACE - Downlink received               (FcntDown=0)
+TRACE - Ack received!
+*INFO - Message sent!* <2>
+----
+<1> Starting to send the message
+<2> Message acknowledged by TTN
+
+Be aware that the time from sending to receiving the acknowledgment may be around 5 seconds.
+
+On the web console, you should see the event, as received by Drogue Cloud.
+
+image:spy-event.png[Screenshot of event spy]

@@ -1,0 +1,65 @@
+= TTN account setup
+
+The step will guide you through the setup of your TTN (v3) account.
+
+If you already have an account, you can of course re-use that. However, we will still need to create an API key. Of
+course, you can also re-use an existing one.
+
+== Choose a location
+
+Start by navigating to the "cluster picker": https://console.cloud.thethings.network/
+
+image::cluster-picker.png[Screenshot of cluster picker]
+
+Pick the location that is best for you and proceed.
+
+== Create the account
+
+image::login.png[Login screen]
+
+On the login screen, choose "Login with The Things ID".
+
+image::login-2.png[Login screen]
+
+Then, continue through the registration process by clicking on "Register".
+
+== Create an API key
+
+Once you are done, you can create a new API key.
+
+Click on the "Personal API keys" menu entry, in the top right corner of the screen:
+
+image::profile-menu.png[Screenshot of profile menu]
+
+The click on the button labeled "+ Add API Key":
+
+image::add-new-key.png[Screenshot of add button]
+
+This will take you the screen for customizing the new API key. Enter a reasonable name, and select the option
+"Grant all current and future rights". Confirm by pressing button "Create API key" on the bottom of the page.
+
+Next, you will see a dialog page, showing the giving you access to the API key:
+
+image::api-key.png[API key dialog]
+
+This is the only time you will have access to the API key, unless you copy it now. Of course, you can delete the API
+key in the TTN console and set up a new one.
+
+Copy the API key, and store it somewhere safe! You will need it later on, but it will also give full access to your TTN
+account.
+
+NOTE: The API key is longer than the text entry field in the dialog. Either use the copy button, or ensure that you
+really copied all characters in this field.
+
+CAUTION: The API key will give full access to your TTN account. Be sure not to leak it. Don't make it public. If you
+did, e.g. by accidentally pushing it to GitHub, you can (and should) delete it right away.
+
+Close the dialog by pressing the button "I have copied the key".
+
+== Gather all important information
+
+From this step, you should have noted the following pieces of information:
+
+Cluster location:: The cluster location, e.g. `eu1`
+Account name:: The name of your TTN account, e.g. `my-ttn-user`
+API key:: The API key, e.g. `0123456789ABCDEF.0123456789ABCDEF` (your actual API key will look different)

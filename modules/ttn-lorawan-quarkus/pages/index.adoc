@@ -1,0 +1,57 @@
+= LoRaWAN end-to-end
+
+This workshop focuses on the use case of reporting data from an embedded device, to the cloud, and receive commands
+back.
+
+The idea is that you have some embedded device, with a LoRa modem, periodically reporting data to the cloud, and
+occasionally receiving back commands to control the device.
+
+Instead of implementing all the LoRa infrastructure ourselves, we re-use the infrastructure of
+https://www.thethingsnetwork.org/[The Things Network] (TTN). However, we will want to process the data as part of our
+Drogue Cloud setup.
+
+[IMPORTANT]
+.Drogue Cloud version
+====
+This workshop requires the (yet) unreleased version of Drogue IoT Cloud 0.5. The sandbox will only be
+updated once 0.5 is released. But, you can still use the "devbox" at https://console-drogue-dev.apps.wonderful.iot-playground.org/
+====
+
+== Pre-requisites
+
+This workshop requires additional hardware, as we need an embedded device with a LoRa modem.
+
+Additionally to the common pre-requisites, you will need:
+
+* A Drogue Device supported development board and LoRa modem
+* Coverage for "The Things Network"
+* A "The Things Network" v3 account
+* A publicly acessible Drogue IoT Cloud instance running version 0.5+
+
+=== Supported embedded device & LoRa modem
+
+Ideally, you have the https://www.st.com/en/evaluation-tools/b-l072z-lrwan1.html[STM32L0 discovery kit for LoRa]
+(B-L072Z-LRWAN1). This kit has a Drogue Device supported STM32 board, and also has an SX1276 modem, for which
+Drogue Device has a LoRa driver.
+
+You may also use a different Drogue Device supported board, adding the SX1276 using SPI. However, this means
+that you need to adapt the provided example firmware yourself.
+
+=== The Things Network coverage
+
+You can think of TTN as your LoRa network provider. When your device wants to send over the TTN LoRa network, you
+need to ensure that you have network coverage. So you can check if your region is already covered. The good thing with
+TTN is, if your region is not covered, you can take care of this yourself.
+
+For this you will need to buy (or lend) a LoRa gateway. The LoRa gateway will open a local LoRa network cell, and
+connect via TCP/IP to the TTN LoRa network backend.
+
+LoRa gateways come in various flavors. You can build one yourself with a Raspberry Pi, you can go all-in and buy an
+industrial, rugged version, mounting this to your roof and cover some km² with LoRa. Or, you can go on the cheap side
+and simply buy the
+https://www.thethingsnetwork.org/docs/gateways/thethingsindoor/index.html[The Things Indoor Gateway (TTIG)].
+
+=== Publicly accessible Drogue Cloud version
+
+This time, you cannot run Drogue Cloud on your local machine. The Things Network will need to reach out to your machine,
+in order to deliver events to Drouge Cloud. For this you need a publicly available instance.

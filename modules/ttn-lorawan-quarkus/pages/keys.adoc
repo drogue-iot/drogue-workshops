@@ -1,0 +1,45 @@
+= Generating keys
+
+As we are using over-the-air activation, the LoRa device will need the following information:
+
+* Device EUI (8 bytes)
+* Application EUI (8 bytes)
+* Application key (16 bytes, not the API key)
+
+== Create from the command line
+
+You can generate random numbers using the following shell script:
+
+[source]
+----
+head -c 8 /dev/urandom | od -An -tx8 | tr a-z A-Z <1>
+head -c 8 /dev/urandom | od -An -tx8 | tr a-z A-Z <2>
+head -c 16 /dev/urandom | od -An -tx16 | tr a-z A-Z <3>
+----
+<1> For generating the Application EUI
+<2> For generating the Device EUI
+<3> For generating the Application Key
+
+For example:
+
+[source]
+----
+$ head -c 8 /dev/urandom | od -An -tx8 | tr a-z A-Z
+ CDAE10B2F5D4B87C <1>
+----
+<1> They value to copy, without the leading whitespace.
+
+== Other ways
+
+You can also manually choose the values of the keys.
+
+NOTE: The values must be unique throughout the LoRa system you are using. So you cannot just re-use them for other
+devices and setups.
+
+== Gather all important information
+
+From this step, you should have noted the following pieces of information:
+
+* Device EUI
+* Application EUI
+* Application Key

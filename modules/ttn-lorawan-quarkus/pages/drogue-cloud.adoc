@@ -1,0 +1,78 @@
+= Drogue IoT Cloud setup
+
+We will need to create a new application inside Drogue Cloud and register a device with it. We will also enable the
+TTN integration so that application and device will be synchronized with the TTN system.
+
+== Create a new application
+
+Simply create a new application using `drg`:
+
+[IMPORTANT]
+.Application name
+====
+By default, the Drogue IoT application name will also be used as the TTN application name. The name must be unique
+in both systems. You have the ability to override the application name, when synchronizing with the TTN system. However,
+this only makes things complicated. So try to come up with a name that should still be free.
+====
+
+[source]
+----
+drg create app my-app
+----
+
+== Enable the TTN integration for the application
+
+Add the `.spec.ttn` section to the application:
+
+[source]
+----
+drg create application my-app --spec '{
+    "ttn": {
+        "api": {
+            "apiKey": "...", <1>
+            "id": "my-app-alias", <2>
+            "owner": "my-user-name", <3>
+            "region": "eu1" <4>
+        }
+    }
+}'
+----
+<1> The API key, generated earlier.
+<2> (Optionally) An alternative application name in the TTN system. By default, this is the Drogue application name.
+<3> The name of the TTN user, selected when creating the TTN account.
+<4> The cluster region, selected when creating the TTN account.
+
+== Create a new device
+
+Simply execute:
+
+[source]
+----
+drg create device --app my-app my-device
+----
+
+== Enable the TTN integration for the device
+
+Next, enable the TTN synchronization:
+
+[source]
+----
+drg create --app my-app device my-device --spec '{
+    "ttn": {
+        "app_eui": "0123456789ABCDEF",
+        "dev_eui": "0123456789ABCDEF",
+        "app_key": "0123456789ABCDEF...",
+        "frequency_plan_id": "...", <1>
+        "lorawan_phy_version": "PHY_V1_0",
+        "lorawan_version": "MAC_V1_0"
+    }
+}'
+----
+<1> An ID of the TTN supported frequency plans, e.g. `EU_863_870`. Also see: https://www.thethingsindustries.com/docs/reference/frequency-plans/
+
+== Checking the results
+
+Once you created the TTN settings, you should see a `.status.ttn` section for both of the resources. This section
+should show the state of the reconciliation process.
+
+If both resources are successfully reconciled, you can proceed.
