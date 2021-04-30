@@ -1,0 +1,5 @@
+name: drogue-workshops
+title: Drogue IoT Workshops
+version: master # "master" is a special identifier for Antora
+nav:
+  - modules/ROOT/nav.adoc
