@@ -3,3 +3,4 @@ title: Drogue IoT Workshops
 version: master # "master" is a special identifier for Antora
 nav:
   - modules/ROOT/nav.adoc
+  - modules/getting-started/nav.adoc

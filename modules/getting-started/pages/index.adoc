@@ -1,0 +1,204 @@
+= Getting started
+
+This is the most basic workshop. It should set you up with all tools and technologies that are required by all the
+other workshops.
+
+It is recommended to finish this workshop first, before diving into the others.
+
+== Pre-requisites
+
+* A local computer
+* The ability to install new application to your local machine
+* Access to a Drogue IoT cloud instance
+* A working internet connection
+
+=== A local computer
+
+Most likely, you are reading this already on a computer. For the tutorials a normal desktop computer should work just
+fine. Linux, macOS, Windows should be fine. Tablets and mobile phones will not be sufficient.
+
+If you want to self-host Drogue IoT on your local machine, you can do that too, but you will need considerably more
+RAM and CPU.
+
+=== Access to a Drogue IoT cloud instance
+
+For most workshops, you will need access to a Drogue IoT cloud instance. You can self-host one, even on a local
+machine using e.g. https://kind.sigs.k8s.io/[Kind] or https://minikube.sigs.k8s.io/[Minikube].
+
+Of course, you can also use our https://sandbox.drogue.cloud/[sandbox cluster].
+
+NOTE: The sandbox cluster is a community hosted instance. Be nice, don't break it. And, accept when it is down. It may
+also be, that we reset the instance every now and then, and all your data stored on it is lost.
+
+== Install the command line client
+
+In order to configure cloud side components, we will use the `drg` command line tool. Technically the Drogue IoT Cloud
+offers a REST API, and you could simply use `curl` or `http` too. However, this makes examples rather verbose, and
+less understandable.
+
+All possible ways of installing are described in the `drg` repository: https://github.com/drogue-iot/drg#installation
+
+=== Install using `cargo`
+
+If you already have `cargo` and a Rust toolchain installed, you can simply execute:
+
+[source]
+----
+cargo install drg
+----
+
+=== Downloading a pre-compiled binary
+
+You can also download a pre-compiled binary from the https://github.com/drogue-iot/drg/releases[releases] page.
+
+== Create an account in Drogue IoT Cloud
+
+Navigate your web browser to the console URL of your Drogue IoT Cloud instance. For the sandbox, this would be
+https://sandbox.drogue.cloud.
+
+Depending on the installation, you need to have some local user credentials, create a new account, or sign up with
+an external identity provider, like GitHub.
+
+== Log in with `drg`
+
+Next, you will need to log in with `drg` to the instance as well. Run the following command:
+
+[source]
+----
+drg login <url to backend>
+----
+
+For the sandbox, this would be:
+
+[source]
+----
+drg login https://api.sandbox.drogue.cloud
+----
+
+`drg login` will open a browser window, to let you start the OpenID Connect login flow. This is required, as the
+Drogue Cloud instance may be paired with an external identity provider, like GitHub. Once the login is completed, you
+will be directed to the Drogue Cloud, which will then redirect to the local `drg` instance, receiving the
+OAuth2 access token.
+
+`drg` will ask you to enter a new _context name_, which you can use later on to switch logins for different instances.
+
+[NOTE]
+====
+Logging in will not switch your current context to the newly logged in one. If you want to use the login just
+created, you will need to switch context:
+
+[source]
+----
+drg context set-active <context_id>
+----
+====
+
+From now on, `drg` has access to your Drogue Cloud instance. When the access token expires, it will automatically
+fetch a fresh token, using the stored refresh token. Your password, is not stored locally.
+
+== Managing contexts
+
+You can see which contexts you have created by:
+
+[source,shell]
+----
+drg context list
+----
+
+This will print out a list of known contexts on your system.
+
+To set a new active context, run:
+
+[source]
+----
+drg context set-active <context>
+----
+
+== Creating a new application
+
+An application is a main resource in Drogue Cloud. It will contain devices, and provide access to data.
+
+Creating a new application is simply, and can be done by executing:
+
+[source]
+----
+drg create app my-app
+----
+
+IMPORTANT: Application names are unique in the system. Workshops may use an application name like `my-app`, which may already
+be used by another use. In this case, you will need to select a different name.
+
+== Creating a new device
+
+Same as creating a new application, you can create a new device too:
+
+[source]
+----
+drg create device --app my-app my-device
+----
+
+As you can see, devices are scoped by applications. So, when creating a new device, you will also need to provide
+the application you want to create it in.
+
+Device names are unique too, however they need to be unique for an application. It is possible to have `device1` as
+part of `app1` and as part of `app2`. These are two distinct devices.
+
+== Viewing and editing resources
+
+Applications and devices can contain additional information like credentials, configurations, status. You can view and
+edit this information.
+
+=== Viewing the current state
+
+From the command line, execute:
+
+[source]
+----
+drg get device --app my-app my-device
+----
+
+This should print out something like:
+
+[source,json]
+----
+{
+  "metadata": {
+    "application": "my-app",
+    "creationTimestamp": "2021-04-30T08:36:41.982194Z",
+    "generation": 0,
+    "name": "my-device",
+    "resourceVersion": "d2ca3370-49d8-4546-b1ac-960a4a7689ef",
+    "uid": "5b10e583-8498-4697-8e0d-7ebd35496e91"
+  }
+}
+----
+
+NOTE: This might indeed remind you of Kubernetes. We tried to model the data structures similar to Kubernetes'. However,
+we didn't blindly copy the structures, only adopted them where it made sense for our use case. When you see something
+that looks familiar, it is. Just don't expect all other Kubernetes concept to be present as well.
+
+=== Editing a resource
+
+You can interactively edit a resource be executing:
+
+[source]
+----
+drg edit device --app my-app my-device
+----
+
+This will load the current state, and open it in a local text editor. Once you save and close the editor, it will
+update the resource in the cloud.
+
+== Deleting a resource
+
+Finally, we can also delete a resource. Let's just delete the whole application:
+
+WARNING: Deleting the application will delete the application and all its devices. There is no way to bring them back.
+
+[source]
+----
+drg delete app my-app
+----
+
+This will start by deleting devices, and then the application. It will also make the name available for others to use
+it. However, devices will still be deleted, when re-creating an appliction with the same name.

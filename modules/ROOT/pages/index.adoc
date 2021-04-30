@@ -1,1 +1,30 @@
-== Introduction
+= Introduction
+
+This section of the book is about some hands-ons workshops. They are focused around a specific use case and will walk
+you through the different steps, explaining what to do any why.
+
+You need to bring a bit more time, and might need some preparation, but you will learn a lot.
+
+We do have a xref:getting-started:index.adoc[Getting Started] workshop, which walks you through the very basics
+of Drogue IoT Cloud. Unless you really know what you are doing, it is recommended to complete this workshop before
+anything else.
+
+== Supported operating systems
+
+These workshops should run on all operating systems. However, testing them on all variations is a time-consuming task.
+
+We mostly test on Linux and macOS. Windows should work as well but is, most likely, less tested. Should you encounter
+some issues, pull-requests are always welcome ;-)
+
+== Drogue IoT Cloud version
+
+Some workshops may require a specific version of Drogue IoT Cloud.
+
+When you self-host an instance, you can pick a specific version. However, in many cases you can also use the
+community hosted sandbox instance. The sandbox will always run the most recent, *released* version of Drogue IoT Cloud.
+
+== Contributing
+
+You are welcome to contribute to this repository. Contributing can come in multiple ways, including constructive
+feedback, fixes, enhancements, or new content. Should you consider to adding new works-shops, we would as to reach
+out to us first. And, be committed on supporting them in the future.
