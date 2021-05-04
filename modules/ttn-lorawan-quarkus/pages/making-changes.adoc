@@ -148,7 +148,7 @@ So after the device is flashed, let's sit back and watch the device _phone home_
 and watch the logs. The LED should change. But, you only see the message `Need to update device state` in the logs,
 when there was a mismatch between the actual and the desired state of the LED.
 
-== Further ideas
+== More ideas
 
 Now it is time to come up with your own ideas. You could:
 
