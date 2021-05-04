@@ -54,7 +54,21 @@ LOG.info("Need to update device state");
 
 == Changing the device
 
-On the device side, we need to add a _ticker_. Take a look at the file `main.rs`, and make the following change:
+On the device side, we need to add a _ticker_. Take a look at the file `main.rs`, and make the following changes:
+
+[source,rust,subs="verbatim,quotes"]
+----
+use drogue_device::{
+    actors::button::*,
+    *actors::ticker::*,* <1>
+    drivers::led::*,
+    drivers::lora::sx127x::*,
+…
+}
+*use embassy::time::Duration;* <2>
+----
+<1> Import the ticker actor.
+<2> Import the `Duration` struct.
 
 [source,rust,subs="verbatim,quotes"]
 ----
