@@ -1,0 +1,145 @@
+= Making changes
+
+Now that we have a LoRaWAN based end-to-end example, we are ready to make some changes.
+
+As mentioned earlier, it may happen that the device misses its downlink message from the cloud. However, it wouldn't
+be a problem if the device would _phone home_ on a regular basisfootnote:[True, there are other ways to deal with this
+as well].
+
+== Making plans
+
+Instead of publishing once when the user presses a button, let's change the logic of the device in way that it
+periodically sends some data. This might be a more realistic scenario anyway, periodically sending gathered telemetry
+data, instead of waiting for a user to press a button.
+
+However, we need to be careful: LoRaWAN isn't intended to constantly send data. First of all, the usage policy restricts
+you from doing so. Second, this is bad for power consumption and thus for the battery.
+
+The Things Network limits downlink messages to a few per day. So we also cannot always send a downlink message, like
+we currently do it, when the button is pressed.
+
+Here is what we need to change:
+
+* The device needs to report the state of the LED to the cloud too.
+* The device needs to periodically _phone home_
+* The cloud side application needs to evaluate if the state of the device's LED is in the desired state.
+* If not, it needs to send out a command to the device to alter its state, but only in this case.
+
+== Changing the cloud side
+
+Let prepare the cloud side first.
+
+All that we need to do is to change the `Processor` class:
+
+[source,java]
+----
+// first we split the payload
+var parts = event.getPayload().split(",");
+
+// then we check if the payload is, what we expect...
+if (parts.length != 2 || !parts[0].startsWith("ping:") || !parts[1].startsWith("led:")) {
+    // .. if not, return with no command
+    return null;
+}
+
+// check if the configured response is about the LED, and if it matches ...
+if (!this.response.startsWith("led:") || parts[1].equals(this.response)) {
+    // ... it is not, or it matches, so we return with no command
+    return null;
+}
+
+// if we end up here, we need to update the device
+LOG.info("Need to update device state");
+----
+
+== Changing the device
+
+On the device side, we need to add a _ticker_. Take a look at the file `main.rs`, and make the following change:
+
+[source,rust,subs="verbatim,quotes"]
+----
+#[derive(Device)]
+pub struct MyDevice {
+    lora: ActorContext<'static, LoraActor<Sx127x<'static>>>,
+    button: ActorContext<'static, Button<'static, ExtiPin<PB2<Input<PullUp>>>, MyApp>>,
+    app: ActorContext<'static, MyApp>,
+    *ticker: ActorContext<'static, Ticker<'static, MyApp>>,* <1>
+}
+----
+<1> Add an actor context for the ticker
+
+Next, initialize the ticker for the device:
+
+[source,rust,subs="verbatim,quotes"]
+----
+context.configure(MyDevice {
+    app: ActorContext::new(App::new(AppInitConfig {
+        tx_led: led2,
+        green_led: led1,
+        init_led: led4,
+        user_led: led3,
+        lora: Some(config),
+    })),
+    lora: ActorContext::new(LoraActor::new(lora)),
+    button: ActorContext::new(Button::new(pin)),
+    *ticker: ActorContext::new(Ticker::new(Duration::from_secs(60), Command::Send)),* <1>
+});
+----
+<1> Add the ticker, and configure it so send the `Command::Send` event every 60 seconds.
+
+Now that the ticker takes care of sending the uplink message, we need to decouple this from the button push event. In
+the file `app.rs`, make the following changes:
+
+[source,rust,subs="verbatim,quotes"]
+----
+fn from(event: ButtonEvent) -> Option<Command> {
+    match event {
+        ButtonEvent::Pressed => None,
+        *ButtonEvent::Released => Some(Command::Tick),* <1>
+    }
+}
+----
+<1> When the button is released, send `Command::Tick` only.
+
+Next, we change the context which is sent to the cloud. We simply append the LED state at the end of the current
+message:
+
+[source,rust,subs="verbatim,quotes"]
+----
+let mut tx = String::<heapless::consts::U32>::new();
+*let led = match self.config.user_led.state().unwrap_or_default() {
+    true => "on",
+    false => "off",
+};* <1>
+write!(&mut tx, *"ping:{},led:{}*", self.counter, led).ok(); <2>
+log::info!("Message: {}", &tx);
+let tx = tx.into_bytes();
+----
+<1> Generate the current state as a string.
+<2> Append the string to uplink message, using the prefix `led:`.
+
+After making those changes, you should be able to compile and flash the firmware again using:
+
+[source]
+----
+cargo run --release
+----
+
+== Making tests
+
+Pretty easy, wasn't it? Noticed the bit of string handling on device side. And still, we are 100% sure we didn't create
+any memory leaks or invalid pointer access in the process thanks to Rust.
+
+So after the device is flashed, let's sit back and watch the device _phone home_. Make some change to the LED state,
+and watch the logs. The LED should change. But, you only see the message `Need to update device state` in the logs,
+when there was a mismatch between the actual and the desired state of the LED.
+
+== Further ideas
+
+Now it is time to come up with your own ideas. You could:
+
+* Switch from sending string to some binary format, to make your LoRa messages more efficient.
+* You could come up with some more elaborate processing on the cloud side. Maybe tie in some external service for
+evaluating the _desired_ state of the LED.
+* Attach a sensor to the device, and send some real data.
+

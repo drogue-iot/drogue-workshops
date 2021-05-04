@@ -5,3 +5,4 @@
 ** xref:drogue-cloud.adoc[Drogue Cloud setup]
 ** xref:firmware.adoc[Device firmware]
 ** xref:quarkus-application.adoc[Quarkus application]
+** xref:making-changes.adoc[Making changes]
