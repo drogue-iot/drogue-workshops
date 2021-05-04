@@ -26,7 +26,8 @@ Additionally to the common pre-requisites, you will need:
 * A Drogue Device supported development board and LoRa modem
 * Coverage for "The Things Network"
 * A "The Things Network" v3 account
-* A publicly acessible Drogue IoT Cloud instance running version 0.5+
+* A publicly accessible Drogue IoT Cloud instance running version 0.5+
+* Standard Java development tools: Java, Maven, Git
 
 === Supported embedded device & LoRa modem
 
