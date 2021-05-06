@@ -8,7 +8,7 @@ Clone the git repository with the example and check out the workshop tag:
 
 [source]
 ----
-git clone https://github.com/drogue-iot/drogue-device-ng
+git clone https://github.com/drogue-iot/drogue-device
 git checkout lora-workshop
 ----
 
