@@ -26,7 +26,7 @@ Add the `.spec.ttn` section to the application:
 
 [source]
 ----
-drg create application my-app --spec '{
+drg create app my-app --spec '{
     "ttn": {
         "api": {
             "apiKey": "...", <1>
