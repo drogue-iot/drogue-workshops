@@ -4,12 +4,12 @@ The next step is to compile and flash the device's firmware.
 
 == Clone the Git repository
 
-Clone the git repository with the example and check out the workshop tag:
+Clone the git repository with the example and check out the `v0.1.0` tag:
 
 [source]
 ----
 git clone https://github.com/drogue-iot/drogue-device
-git checkout lora-workshop
+git checkout v0.1.0
 ----
 
 For the next steps, you will need to change into the sub-directory `examples/stm32l0xx/lora-discovery/`:
