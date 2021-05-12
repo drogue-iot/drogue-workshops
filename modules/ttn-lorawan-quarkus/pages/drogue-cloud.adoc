@@ -42,18 +42,9 @@ drg create app my-app --spec '{
 <3> The name of the TTN user, selected when creating the TTN account.
 <4> The cluster region, selected when creating the TTN account.
 
-== Create a new device
+== Create device with TTN integration
 
-Simply execute:
-
-[source]
-----
-drg create device --app my-app my-device
-----
-
-== Enable the TTN integration for the device
-
-Next, enable the TTN synchronization:
+Next, create a device and enable the TTN synchronization:
 
 [source]
 ----
