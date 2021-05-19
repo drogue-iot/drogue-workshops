@@ -1,3 +1,5 @@
+:star: *
+
 = Making changes
 
 Now that we have a LoRaWAN based end-to-end example, we are ready to make some changes.
@@ -56,11 +58,11 @@ LOG.info("Need to update device state");
 
 On the device side, we need to add a _ticker_. Take a look at the file `main.rs`, and make the following changes:
 
-[source,rust,subs="verbatim,quotes"]
+[source,rust,subs="verbatim,quotes,attributes+"]
 ----
 use drogue_device::{
     actors::button::*,
-    *actors::ticker::*,* <1>
+    *actors::ticker::{star}*, <1>
     drivers::led::*,
     drivers::lora::sx127x::*,
 …
