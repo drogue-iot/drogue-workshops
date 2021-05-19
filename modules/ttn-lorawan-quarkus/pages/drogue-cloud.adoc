@@ -26,7 +26,7 @@ Add the `.spec.ttn` section to the application:
 
 [source]
 ----
-drg create application my-app --spec '{
+drg create app my-app --spec '{
     "ttn": {
         "api": {
             "apiKey": "...", <1>
@@ -42,33 +42,25 @@ drg create application my-app --spec '{
 <3> The name of the TTN user, selected when creating the TTN account.
 <4> The cluster region, selected when creating the TTN account.
 
-== Create a new device
+== Create device with TTN integration
 
-Simply execute:
-
-[source]
-----
-drg create device --app my-app my-device
-----
-
-== Enable the TTN integration for the device
-
-Next, enable the TTN synchronization:
+Next, create a device and enable the TTN synchronization:
 
 [source]
 ----
-drg create --app my-app device my-device --spec '{
+drg create device my-device --app my-app --spec '{
     "ttn": {
         "app_eui": "0123456789ABCDEF",
         "dev_eui": "0123456789ABCDEF",
-        "app_key": "0123456789ABCDEF...",
-        "frequency_plan_id": "...", <1>
+        "app_key": "0123456789ABCDEFGHIJKLMNOPQRSTUV", <1>
+        "frequency_plan_id": "...", <2>
         "lorawan_phy_version": "PHY_V1_0",
         "lorawan_version": "MAC_V1_0"
     }
 }'
 ----
-<1> An ID of the TTN supported frequency plans, e.g. `EU_863_870`. Also see: https://www.thethingsindustries.com/docs/reference/frequency-plans/
+<1> A 32 byte application key. *IMPORTANT* This should be changed to a secret value
+<2> An ID of the TTN supported frequency plans, e.g. `EU_863_870_TTN`. Also see: https://www.thethingsindustries.com/docs/reference/frequency-plans/
 
 == Checking the results
 
