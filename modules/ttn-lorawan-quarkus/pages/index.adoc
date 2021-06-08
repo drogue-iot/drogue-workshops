@@ -10,13 +10,6 @@ Instead of implementing all the LoRa infrastructure ourselves, we re-use the inf
 https://www.thethingsnetwork.org/[The Things Network] (TTN). However, we will want to process the data as part of our
 Drogue Cloud setup.
 
-[IMPORTANT]
-.Drogue Cloud version
-====
-This workshop requires the (yet) unreleased version of Drogue IoT Cloud 0.5. The sandbox will only be
-updated once 0.5 is released. But, you can still use the "devbox" at https://console-drogue-dev.apps.wonderful.iot-playground.org/
-====
-
 == Pre-requisites
 
 This workshop requires additional hardware, as we need an embedded device with a LoRa modem.
