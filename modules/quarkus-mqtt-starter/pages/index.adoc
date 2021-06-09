@@ -1,0 +1,43 @@
+= Quarkus MQTT integration starter
+
+This workshop focuses on the consumption of telemetry data, coming from the MQTT integration API of Drogue Cloud.
+
+It will consume data from a public application, which runs on our public sandbox installation, so that the workshop
+can focus on the cloud side data processing.
+
+[IMPORTANT]
+.Drogue Cloud sandbox
+====
+This workshop consumes data from the public sandbox. This allows you to re-use an existing stream of data, without
+the need to set up your own instance. However, it maybe the that the sandbox is down. We will definitely fix this,
+but it may take a bit.
+
+Of course, you can also host your own Drogue IoT cloud instance, and even use Minikube or Kind to do so.
+====
+
+== Pre-requisites
+
+The final web dashboard can be viewed with just a web browser, as it is hosted on our sandbox server too. So all that
+you need is just a web browser.
+
+However, if you want to get a bit more hands-on, you might need some additional pre-requisites.
+
+=== Local developer setup
+
+For locally running the starter, you will need a standard Java developer setup. A Java 11+ JDK, a code editor or IDE,
+and the ability to run some commands like `mvn`.
+
+=== Deploy to Kubernetes
+
+For this, you will of course need a Kubernetes cluster. If a local test deployment is sufficient for you, then you
+can also use something like Minikube or Kind.
+
+Instead of setting up your own cluster, you can also use something like the
+https://developers.redhat.com/developer-sandbox[OpenShift Developer Sandbox].
+
+In any case, you will need the `kubectl` binary on your local machine, and be logged in to your Kubernetes cluster.
+
+=== Deploy to Kubernetes (using Helm)
+
+You can also deploy the code using Helm. Additionally to a Kubernetes cluster (as described above), you will of course
+ also need the `helm` binary (version 3.x).

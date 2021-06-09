@@ -1,0 +1,21 @@
+= What to expect?
+
+As mentioned before, we actually host the application on your sandbox cluster too. You can take a look at https://quarkus-mqtt-integration-starter-drogue-quarkus-demos.apps.wonderful.iot-playground.org/
+
+On this page, you should see a dashboard like shown in the following screenshot:
+
+image:screenshot.png[Screenshot of the dashboard]
+
+== What do you see?
+
+This dashboard shows the most recent received message from any device. If the message contained geolocation information,
+then it will also put a marker on the map. Only one marker will be shown at a time, so a new marker will replace
+any previous markers.
+
+The data comes from a publicly available data stream, hosted on the Drogue IoT sandbox cluster.
+
+You can subscribe to that data stream with a simple MQTT client yourself.
+
+== What's next?
+
+Here? Not much! Now it is up to you to replicate this.

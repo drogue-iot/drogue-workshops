@@ -1,0 +1,7 @@
+* xref:index.adoc[Quarkus MQTT integration starter]
+** xref:index.adoc[Overview]
+** xref:peeking.adoc[What to expect]
+** xref:local.adoc[Running it locally]
+** xref:internals.adoc[How does it work?]
+** xref:kubernetes.adoc[Deploying to Kubernetes]
+** xref:cloud.adoc[Moving to the cloud]

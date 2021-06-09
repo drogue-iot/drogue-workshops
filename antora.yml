@@ -5,4 +5,4 @@ nav:
   - modules/ROOT/nav.adoc
   - modules/getting-started/nav.adoc
   - modules/ttn-lorawan-quarkus/nav.adoc
-
+  - modules/quarkus-mqtt-starter/nav.adoc

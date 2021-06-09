@@ -1,0 +1,108 @@
+:experimental: true
+
+= Running locally
+
+The next step is to run this locally.
+
+== Getting the source code
+
+Go to https://github.com/drogue-iot/quarkus-mqtt-integration-starter[drogue-iot/quarkus-mqtt-integration-starter] on
+GitHub and fork the repository. It is a template repository, which allows you to easily create a copy of it. This allows
+you to make and push changes to your own copy, and is required for other parts of the workshop.
+
+You can easily do this by making a copy:
+
+image:template-repo.png[Screenshot of template button]
+
+Choose a name, and then clone the repository on your local machine.
+
+[NOTE]
+.Repository location
+====
+The following commands and examples will still use the original HTTP link to the repository.
+
+If you created a copy, please be sure to adapt the name accordingly.
+====
+
+On your local machine, you can clone the source using the `git` command line tool like this:
+
+[source]
+----
+git clone https://github.com/drogue-iot/quarkus-mqtt-integration-starter
+----
+
+== Which IDE/editor to use?
+
+This is completely up to you! Quarkus works together with all kinds of IDEs and editors.
+
+In the following sections we will focus on command line usage of tools, like `mvn`. You know your environment best,
+so if you dislike using the command line, you can always use equivalent IDE operations instead.
+
+== Starting locally
+
+Quarkus applications can be started locally by executing the following command, and this application is no different:
+
+[source]
+----
+./mvnw quarkus:dev
+----
+
+This will compile and run the application in debug mode. Beside the Maven build output, you should see the
+application's log output in the end:
+
+[source]
+----
+[INFO] No sources to compile
+Listening for transport dt_socket at address: 5005
+__  ____  __  _____   ___  __ ____  ______
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/
+ -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/
+2021-06-08 15:15:35,753 INFO  [io.und.websockets] (Quarkus Main Thread) UT026003: Adding annotated server endpoint class io.drogue.iot.demo.ui.EventsResource for path /ws
+2021-06-08 15:15:35,775 DEBUG [io.sma.rea.mes.provider] (Quarkus Main Thread) SRMSG00226: Found incoming connectors: [smallrye-mqtt]
+2021-06-08 15:15:35,776 DEBUG [io.sma.rea.mes.provider] (Quarkus Main Thread) SRMSG00227: Found outgoing connectors: [smallrye-mqtt]
+2021-06-08 15:15:35,777 DEBUG [io.sma.rea.mes.provider] (Quarkus Main Thread) SRMSG00229: Channel manager initializing...
+2021-06-08 15:15:35,795 DEBUG [io.sma.rea.mes.mqt.ses.imp.MqttClientSessionImpl] (vert.x-eventloop-thread-0) Creating connection
+2021-06-08 15:15:35,798 DEBUG [io.sma.rea.mes.mqt.ses.imp.MqttClientSessionImpl] (vert.x-eventloop-thread-0) setState - current: DISCONNECTED, next: CONNECTING
+2021-06-08 15:15:35,823 DEBUG [io.sma.rea.mes.provider] (Quarkus Main Thread) SRMSG00209: Beginning graph resolution, number of components detected: 8
+2021-06-08 15:15:35,825 DEBUG [io.sma.rea.mes.provider] (Quarkus Main Thread) SRMSG00210: Graph resolution completed in 1394483 ns
+2021-06-08 15:15:35,825 DEBUG [io.sma.rea.mes.provider] (Quarkus Main Thread) SRMSG00235: Beginning materialization
+2021-06-08 15:15:35,856 DEBUG [io.sma.rea.mes.provider] (Quarkus Main Thread) SRMSG00236: Materialization completed in 30541131 ns
+2021-06-08 15:15:35,921 DEBUG [io.sma.rea.mes.mqt.ses.imp.MqttClientSessionImpl] (vert.x-eventloop-thread-0) Request to subscribe to: app/drogue-public-temperature / QOS_0
+2021-06-08 15:15:35,922 DEBUG [io.sma.rea.mes.mqt.ses.imp.MqttClientSessionImpl] (vert.x-eventloop-thread-0) Requesting subscribe: app/drogue-public-temperature / QOS_0
+2021-06-08 15:15:35,933 DEBUG [io.ver.mqt.imp.MqttClientImpl] (vert.x-eventloop-thread-0) Trying to connect with mqtt-integration-drogue-dev.apps.wonderful.iot-playground.org:443
+2021-06-08 15:15:36,036 INFO  [io.quarkus] (Quarkus Main Thread) drogue-quarkus-mqtt-integration-starter 1.0.0-SNAPSHOT on JVM (powered by Quarkus 2.0.0.CR3) started in 1.499s. Listening on: http://localhost:8080
+----
+
+The command will not return to the shell, you need to abort the command using kbd:[Ctrl+C]
+
+Watch out for a line like this:
+
+[source]
+----
+2021-06-08 15:15:36,315 DEBUG [io.sma.rea.mes.mqt.ses.imp.MqttClientSessionImpl] (vert.x-eventloop-thread-0) setState - current: CONNECTING, next: CONNECTED
+----
+
+The transition to `CONNECTED` shows, that the MQTT connection has been establishes successfully.
+
+After that, a line like the following should appear too:
+
+[source]
+----
+2021-06-08 15:15:44,520 INFO  [io.dro.iot.dem.int.Receiver] (vert.x-eventloop-thread-0) Received message: CloudEvent{id='dec025b8-3ef8-4a15-a531-bda944dcd9db', source=drogue://drogue%2Dpublic%2Dtemperature/A4%3AC1%3A38%3AA2%3A6D%3A42, type='io.drogue.event.v1', datacontenttype='application/json', dataschema=urn:drogue:iot:temperature, subject='status', time=2021-06-08T13:15:44.459994106Z, data=BytesCloudEventData{value=[123, 34, 116, 101, 109, 112, 34, 58, 32, 51, 48, 46, 56, 44, 32, 34, 104, 117, 109, 34, 58, 32, 52, 49, 44, 32, 34, 98, 97, 116, 116, 34, 58, 32, 57, 52, 44, 32, 34, 103, 101, 111, 108, 111, 99, 34, 58, 32, 123, 34, 108, 97, 116, 34, 58, 32, 52, 56, 46, 48, 55, 56, 56, 56, 44, 32, 34, 108, 111, 110, 34, 58, 32, 49, 49, 46, 56, 54, 49, 57, 52, 125, 125]}, extensions={knativehistory=iot-channel-kn-channel.drogue-dev.svc.cluster.local, instance=drogue, partitionkey=drogue%2Dpublic%2Dtemperature/A4%3AC1%3A38%3AA2%3A6D%3A42, application=drogue-public-temperature, device=A4:C1:38:A2:6D:42}}
+----
+
+This indicates a received message, including its payload, in binary format. But you can already see that the message
+has been successfully decoded as a "CloudEvent". The metadata of the cloud event already gives a bit of information
+what the event is about.
+
+== One small step …
+
+This already was the first step. You can take your browser and navigate to http://localhost:8080 and should see
+the same dashboard that the sandbox hosts.
+
+== What's next?
+
+Now it is time to understand what is going on under the hood. And get ready to make some first changes.
+
+

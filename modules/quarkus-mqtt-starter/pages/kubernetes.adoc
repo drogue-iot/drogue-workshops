@@ -1,0 +1,243 @@
+= Deploying to Kubernetes
+
+In order to deploy this to a Kubernetes cluster, we will first need to create a container image for the application.
+
+Later on, we will also show how you can build this in the cloud, and automatically re-deploy when you make changes.
+
+== Creating a container
+
+You can build container images locally. First, ensure that you have an up-to-date Maven build:
+
+[source]
+----
+mvn clean package
+----
+
+And then, create a container image from it:
+
+[source]
+----
+docker build -t my-quarkus-mqtt-starter . -f src/main/docker/Dockerfile.jvm
+----
+
+NOTE: Of course, you can simply replace the `docker` command with `podman`, it works the same way.
+
+== Pushing images
+
+The previous step created a container image in your local machine. However, when using a Kubernetes cluster, that may
+not be sufficient. You might need to push the image to a container registry. Reasonable choices are https://quay.io[quay.io]
+or https://github.blog/2020-09-01-introducing-github-container-registry/[GitHub container registry].
+
+Assuming you push to `quay.io` with your user being `myaccount`, you would need to run the following commands:
+
+[source]
+----
+docker tag my-quarkus-starter quay.io/myaccount/my-quarkus-mqtt-starter:latest
+docker push quay.io/myaccount/my-quarkus-mqtt-starter:latest
+----
+
+== Deploying the application
+
+In the folder https://github.com/drogue-iot/quarkus-mqtt-integration-starter/tree/main/deploy[`deploy/`], you will find
+some example deployment files.
+
+First, if you want to deploy your changed container image, you will need to replace the image name in the file
+`deploy/020-deployment.yaml`:
+
+[source,yaml]
+----
+kind: Deployment
+apiVersion: apps/v1
+
+metadata:
+  name: quarkus-mqtt-integration-starter
+  # …
+spec:
+  # …
+  template:
+    # …
+    spec:
+      containers:
+        - name: service
+          image: ghcr.io/drogue-iot/quarkus-mqtt-integration-starter-jvm:latest <1>
+          imagePullPolicy: Always
+          # …
+----
+
+<1> The original name image, which you may replace if you want to deploy your own version
+
+TIP: For all examples, it is a good idea to use a dedicated namespace, in order to isolate your deployment.
+
+=== OpenShift
+
+If you are using OpenShift as a cluster, you can simply run the following command to deploy the application:
+
+[source,bash]
+----
+kubectl apply -f deploy/
+----
+
+You can then get the HTTP endpoint using the following command:
+
+[source,bash]
+----
+kubectl get route quarkus-mqtt-integration-starter
+----
+
+Which should print out the information on the console like this:
+
+[source]
+----
+NAME                               HOST/PORT                                                                                     PATH   SERVICES                           PORT   TERMINATION     WILDCARD
+quarkus-mqtt-integration-starter   quarkus-mqtt-integration-starter-my-user-stage.apps.sandbox-m2.ll9k.p1.openshiftapps.com          quarkus-mqtt-integration-starter   http   edge/Redirect   None
+----
+
+The hostname is in the "HOST" column, and normally it is an HTTPS link. So the web-frontend URL (in this case)
+would be https://quarkus-mqtt-integration-starter-my-user-stage.apps.sandbox-m2.ll9k.p1.openshiftapps.com
+
+==== Using OpenShift Developer Sandbox
+
+You can also use the https://developers.redhat.com/developer-sandbox[Developer Sandbox for Red Hat OpenShift] to
+directly host this application.
+
+=== Azure Kubernetes Service
+
+Before you start, you will need an Azure account and have the `az` command installed and connected to your account.
+
+[WARNING]
+.This may cost money
+====
+Deploying the example on Azure may result on costs being billed to your account. You need to understand
+what the following commands actually do and ensure that you clean up resources after you are finished testing.
+
+If in doubt, consider a locally hosted Kubernetes solution like Minikube or Kind.
+
+Also see the documentation: https://docs.microsoft.com/en-us/azure/aks/
+====
+
+==== Creating a cluster
+
+If you don't have a cluster yet, you can create a simple test cluster by executing the following commands.
+
+[NOTE]
+====
+The following steps are an opinionated setup, focused on this specific use case. It follows the quick start
+instructions for the Azure Kubernetes Service.
+
+Also see the documentation: https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough
+====
+
+[source,bash]
+----
+az group create --name my-quarkus-mqtt-starter --location eastus
+az aks create --resource-group my-quarkus-mqtt-starter --name my-quarkus-mqtt-cluster --node-count 1 --enable-addons monitoring,http_application_routing --generate-ssh-keys
+az aks get-credentials --resource-group my-quarkus-mqtt-starter --name my-quarkus-mqtt-cluster
+----
+
+Finally, verify that the cluster is running and that `kubectl` is properly configured to access it. Execute the following
+command:
+
+[source,bash]
+----
+kubectl get nodes
+----
+
+Which should result in an output like this:
+
+[source]
+----
+NAME                                STATUS   ROLES   AGE   VERSION
+aks-nodepool1-20363394-vmss000000   Ready    agent   81s   v1.19.11
+----
+
+==== Deploying the application
+
+Create a new namespace:
+
+[source,bash]
+----
+kubectl create namespace quarkus-mqtt-starter
+----
+
+Deploy the application:
+
+[source,bash]
+----
+kubectl -n quarkus-mqtt-starter apply -f deploy/010-configuration.yaml
+kubectl -n quarkus-mqtt-starter apply -f deploy/020-deployment.yaml
+kubectl -n quarkus-mqtt-starter apply -f deploy/030-service.yaml
+----
+
+==== Routing ingress traffic
+
+[source,bash]
+----
+az aks show --resource-group my-quarkus-mqtt-starter --name my-quarkus-mqtt-cluster --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o table
+----
+
+This should print out the cluster's domain name:
+
+[source]
+----
+Result
+-------------------------------------
+d578cb0564094cf8979c.eastus.aksapp.io <1>
+----
+<1> Cluster DNS name
+
+Create a new ingress using:
+
+[source]
+----
+kubectl apply -f - <<EOF
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  namespace: quarkus-mqtt-starter
+  name: web-frontend
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+    - host: web-frontend.d578cb0564094cf8979c.eastus.aksapp.io <1>
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: quarkus-mqtt-integration-starter
+                port:
+                  name: http
+EOF
+----
+<1> A combination of `web-frontend.` plus the cluster domain name from before.
+
+The link to the web-frontend is (in this case): http://web-frontend.d578cb0564094cf8979c.eastus.aksapp.io
+
+==== Clean up
+
+If you created a cluster in an earlier step, you should clean it up by deleting the resource group.
+
+WARNING: The following command will delete the whole resource group without asking for confirmation. Ensure that this
+is really what you want to do.
+
+[source,bash]
+----
+az group delete --name my-quarkus-mqtt-starter --yes
+----
+
+NOTE: To avoid unexpected charges, manually double check that all resources have indeed been cleaned up.
+
+=== Any other Kubernetes
+
+For any other Kubernetes, you will need some kind of Ingress controller, and need to map the ingress traffic to
+the application `Service`. Since this is very difference between different Kubernetes providers, it is hard to give
+a reasonable example.
+
+== What's next?
+
+We deployed the application into a Kubernetes cluster, and have it running and processing our data there.
+
+Of course, you can start making changes already. If you wait for the next chapter, you might see how you can make this
+process a bit simpler.
