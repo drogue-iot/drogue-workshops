@@ -123,7 +123,7 @@ Create the file `src/main/resources/application-dev.properties` and add the foll
 drogue.application.name=my-app <1>
 drogue.api.user=my-username <2>
 drogue.api.key=drg_g0yAUq_3z5pasdcasdeI4YqOP123hdsa821VAtFs4x <3>
-drogue.integration.mqtt.host=mqtt-integration-drogue-dev.apps.wonderful.iot-playground.org <4>
+drogue.integration.mqtt.host=mqtt-integration.sandbox.drogue.cloud <4>
 drogue.integration.mqtt.port=443 <5>
 ----
 <1> The Drogue IoT application name
