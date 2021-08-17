@@ -2,6 +2,14 @@
 
 We will need to create a new application inside Drogue Cloud and register a device with it.
 
+== Log in
+
+Log into the sandbox using the `drg` tool:
+[source]
+----
+drg login https://sandbox.drogue.cloud
+----
+
 == Create a new application
 
 Simply create a new application using `drg`:

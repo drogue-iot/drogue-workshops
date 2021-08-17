@@ -13,9 +13,9 @@ Lets change our application to send a command back if the reported temperature i
 
 Here is what we need to change:
 
-* The device needs to keep an ON/OFF state
+* The device needs to keep an ON/OFF state, signaled by a LED
 * The cloud side application needs to evaluate if the temperature is too high
-* If it is, it needs to send out a command to the device to switch of the 'heat'
+* If it is, it needs to send out a command to the device to switch off
 
 == Changing the cloud side
 
@@ -48,7 +48,7 @@ Pretty easy, wasn't it? Noticed the bit of string handling on device side. And s
 any memory leaks or invalid pointer access in the process thanks to Rust.
 
 So after the device is flashed, let's sit back and let the device report the temperatures for a
-while. Then, make the temperature rise by breathing on the micro:bit. The reported temperature
+while. Then, make the temperature rise by breathing on the temperature sensor on the board. The reported temperature
 should start to rise and the cloud will tell it to 'switch OFF'.
 
 == More ideas

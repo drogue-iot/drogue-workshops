@@ -6,3 +6,4 @@ nav:
   - modules/getting-started/nav.adoc
   - modules/ttn-lorawan-quarkus/nav.adoc
   - modules/quarkus-mqtt-starter/nav.adoc
+  - modules/wifi-websockets/nav.adoc

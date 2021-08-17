@@ -12,14 +12,14 @@ git clone https://github.com/drogue-iot/drogue-device
 git checkout 0.4.0
 ----
 
-For the next steps, you will need to change into the sub-directory `examples/nrf52/microbit/esp8266`:
+For the next steps, you will need to change into the sub-directory `examples/stm32l4/discovery-iot01a`:
 
 [source]
 ----
-cd examples/nrf52/microbit/esp8266
+cd examples/stm32l4/discovery-iot01a
 ----
 
-IMPORTANT: If you don't use the microbit board, you will need to adapt the firmware to match your device and
+IMPORTANT: If you don't use the iot01a board, you will need to adapt the firmware to match your device and
 hardware configuration!
 
 == Update the device configuration
@@ -60,7 +60,7 @@ Pay attention to the line indicating that the WiFi network was successfully join
 
 == Pressing buttons
 
-To send a message to Drogue Cloud, press the 'A' button on the board.
+To send a message to Drogue Cloud, press the blue button on the board.
 
 But before you do, open up the web console, navigate to the "Spy", and start it, using the Drogue application
 name you have assigned earlier.
