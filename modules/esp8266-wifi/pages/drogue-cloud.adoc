@@ -1,0 +1,21 @@
+= Drogue IoT Cloud setup
+
+We will need to create a new application inside Drogue Cloud and register a device with it.
+
+== Create a new application
+
+Simply create a new application using `drg`:
+
+[source]
+----
+drg create app wifi-workshop
+----
+
+== Create device
+
+Next, create a device
+
+[source]
+----
+drg create device --app wifi-workshop device1 --data '{"credentials":{"credentials":[{"pass":"mysecretpassword"}]}}'
+----

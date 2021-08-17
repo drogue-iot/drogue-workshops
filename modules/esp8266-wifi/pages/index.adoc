@@ -1,0 +1,30 @@
+= WiFi end-to-end
+
+This workshop focuses on the use case of reporting data from an embedded device, to the cloud, and receive commands
+back.
+
+The idea is that you have some embedded device, with a WiFi modem, periodically reporting data to the cloud, and
+occasionally receiving back commands to control the device.
+
+== Pre-requisites
+
+This workshop requires additional hardware, as we need an embedded device with a WiFi modem.
+
+Additionally to the common pre-requisites, you will need:
+
+* A Drogue Device supported development board and WiFi modem
+* A WiFi network
+* A publicly accessible Drogue IoT Cloud instance running version 0.5+
+* Standard Java development tools: Java, Maven, Git
+
+=== Supported embedded device & WiFi modem
+
+You need an nRF52-based board such as the BBC micro:bit. You may also use a different Drogue Device supported board. However, this means
+that you need to adapt the provided example firmware yourself.
+
+In addition, you need an ESP8266-based adapter such as an foo[ESP-01] or foo[NodeMCU] that is
+connected to the main board.
+
+=== Drogue Cloud
+
+You can run Drogue Cloud yourself, or use the public sandbox.
