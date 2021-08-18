@@ -41,6 +41,15 @@ IMPORTANT: You need to have the developer board attached to your computer.
 cargo run --release
 ----
 
+It may happen that the operation fails, especially when you try to flash the board for the first time. If that's the case,
+you can try running the following.
+
+[source]
+----
+cargo build --release
+probe-run target/thumbv6m-none-eabi/release/lora-discovery --connect-under-reset --chip STM32L072CZ
+----
+
 == Checking the result
 
 Once you flashed and started the program, `cargo run` will keep attached to the application running on the development
