@@ -1,0 +1,7 @@
+= Telemetry end-to-end
+
+The Telemetry end-to-end example is a package of the https://www.eclipse.org/packages[Eclipse IoT Packages™] project. It describes itself as:
+
+> A package showing telemetry data acquisition end-to-end: Microcontroller firmware to cloud side data processing, using Drogue IoT and Apache Kafka in the process.
+
+As the content is part of the IoT packages project, we only link the tutorial. You can take a look at: https://www.eclipse.org/packages/packages/telemetry-e2e/

@@ -1,0 +1,1 @@
+* xref:telemetry-e2e.adoc[Telemetry end-to-end]
