@@ -1,8 +1,12 @@
-= From WiFi to Websocket
+= Visualizing Sensor Data
 
-This workshop focuses on the use case of reporting data from an embedded device, to the cloud, receive telemetry data in a web application, and send commands back to the device.
+This workshop focuses on the use case of reporting data from an embedded device with a HTTP client, to the cloud and receive and visualize telemetry data.
 
-The idea is that you have some embedded device, with a WiFi modem, reporting data to the cloud, and occasionally receiving back commands to control the device.
+The workshop is split into three phases. In phase one, we will use the embedded device to send temperature and humidity data to an instance of Drogue Cloud using a WiFi-capable development kit.
+
+In the second phase, we will demonstrate the websocket integration of Drogue Cloud, and run a simple web application locally that consumes telemetry and creates a live graph of the temperature data.
+
+In the third phase, we will deploy an application to the cloud that consumes the same telemetry data and storing it in a database, and uses Grafana to create a dashboard for our application.
 
 == Pre-requisites
 
@@ -11,15 +15,13 @@ This workshop requires additional hardware, as we need an embedded device with a
 Additionally to the common pre-requisites, you will need:
 
 * A Drogue Device supported development board and WiFi modem
-* A WiFi network
-* A publicly accessible Drogue IoT Cloud instance running version 0.5+
-* Standard development tools: Git
+* A publicly accessible Drogue IoT Cloud instance running version 0.8+
+* Development tools: Git and Rust
 
-=== Supported embedded device & WiFi modem
+=== Supported embedded device
 
-You need a board with a supported WiFi adapter such as the https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html[STM32L4 Discovery Kit]. You may also use a different Drogue Device supported board. However, this means
-that you need to adapt the provided example firmware yourself.
+You need a board with network connectivity, such as the https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html[STM32L4 IoT Discovery Kit]. You may also use a different board that can run Drogue Device. However, this means that you need to adapt the provided example firmware yourself.
 
 === Drogue Cloud
 
-For this workshop, we recommend using the https://sandbox.drogue.cloud[Drogue Cloud Sandbox].
+For this workshop, we recommend using the https://sandbox.drogue.cloud[Drogue Cloud Sandbox], but you can use your own instance of Drogue Cloud if you want to.
