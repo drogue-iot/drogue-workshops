@@ -1,0 +1,39 @@
+= Toolchain setup
+
+In order to create a device firmware, you will need to set up an embedded toolchain for Rust.
+
+== Install `rustup`
+
+In order to install Rust and Rust components, you will need https://rustup.rs/[rustup]:
+
+On Unix-like environment, the following command should work just fine:
+
+[source]
+----
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+----
+
+There are other ways to install `rustup`. Check its homepage to learn more.
+
+Also see:
+
+* https://rustup.rs/[rustup homepage]
+
+== Install an embedded toolchain
+
+By default, `rustup` will install a toolchain (compiler, …) for your current host architecture and operating system.
+
+When compiling a device firmware, we need to have a compiler for a different architecture (CPU). The examples used in this workshop contain a rust-toolchain file which will tell rustup to automatically download the toolchain required for your board.
+
+== Additional tools
+
+In addition to the actual toolchain, you will need tools to flash the firmware to your device, and to monitor what is going on.
+
+There are a few tools for Rust which can help here. However, we will focus on the https://github.com/knurling-rs/probe-run[probe-run].
+
+You can install `probe-run` be executing the following command:
+
+[source]
+----
+cargo install probe-run
+----

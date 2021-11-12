@@ -2,21 +2,23 @@
 
 The next step is to compile and flash the device's firmware.
 
+NOTE: There are two variants of the IoT01A board. Both should work, but this guide will use the parameters for the L475E variant.
+
 == Clone the Git repository
 
-Clone the git repository with the example and check out the `0.4.0` tag:
+Clone the git repository with the example and check out the `0.5.0` tag:
 
 [source]
 ----
 git clone https://github.com/drogue-iot/drogue-device
-git checkout 0.4.0
+git checkout 0.5.0
 ----
 
-For the next steps, you will need to change into the sub-directory `examples/stm32l4/discovery-iot01a`:
+For the next steps, you will need to change into the sub-directory `examples/stm32l4/iot01a-wifi`:
 
 [source]
 ----
-cd examples/stm32l4/discovery-iot01a
+cd examples/stm32l4/iot01a-wifi
 ----
 
 IMPORTANT: If you don't use the iot01a board, you will need to adapt the firmware to match your device and
@@ -42,7 +44,7 @@ IMPORTANT: You need to have the developer board attached to your computer.
 
 [source]
 ----
-cargo run --release
+PROBE_RUN_CHIP=STM32L475VG cargo run --release --features b-l475e-iot01a,tls
 ----
 
 == Checking the result
@@ -52,27 +54,31 @@ board. The output should look something like this:
 
 [source,subs="verbatim,quotes"]
 ----
-TODO <1>
+     Running `probe-run target/thumbv7em-none-eabihf/release/iot01a-wifi`
+(HOST) WARN  (BUG) location info is incomplete; it will be omitted from the output
+(HOST) INFO  flashing program (164.62 KiB)
+(HOST) INFO  success!
+────────────────────────────────────────────────────────────────────────────────
+ INFO  Starting eS-WiFi adapter!
+ INFO  eS-WiFi adapter is ready
+ INFO  Started...
+ INFO  Joining WiFi network... <1>
+ INFO  WiFi network joined
+ INFO  Application initialized. Press 'User' button to send data
+ INFO  Sending temperature measurement number 0 <2>
+ INFO  Connected to 192.168.1.2:8088
+ INFO  Response status: Accepted <3>
 ----
 <1> Successfully joined the WiFi network
+<2> At this point the HTTP request is going to be sent
+<3> The Response status indicates if data was sent successfully
 
-Pay attention to the line indicating that the WiFi network was successfully joined.
+Pay attention to the output in the event of an error.
 
-== Pressing buttons
+The sensor data is automatically sent every 30 seconds. To send a message to Drogue Cloud manually, press the blue button on the board.
 
-To send a message to Drogue Cloud, press the blue button on the board.
-
-But before you do, open up the web console, navigate to the "Spy", and start it, using the Drogue application
-name you have assigned earlier.
-
-Now you can press the button! This will trigger the device to send a fake temperature reading to
-Drogue Cloud. There is no one there to receive yet, it should still show up in the Spy console.
-
-[source,subs="verbatim,quotes"]
-----
-TODO
-----
+If the device is sending data successfully, we can confirm that the event is processed by Drogue Cloud by opening the link:https://sandbox.drogue.cloud[web console], navigate to the "Spy", and start it, using the Drogue application name you have assigned earlier.
 
 On the web console, you should see the event, as received by Drogue Cloud.
 
-image:spy-event.png[Screenshot of event spy]
+image:spy-workshop.png[Screenshot of event spy]

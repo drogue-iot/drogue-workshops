@@ -21,9 +21,11 @@ drg create app wifi-workshop
 
 == Create device
 
-Next, create a device
+Next, create a device:
 
 [source]
 ----
 drg create device --app wifi-workshop device1 --data '{"credentials":{"credentials":[{"pass":"mysecretpassword"}]}}'
 ----
+
+If the device has been created successfully, proceed to the next step.

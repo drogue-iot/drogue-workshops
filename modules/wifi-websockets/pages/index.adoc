@@ -14,8 +14,8 @@ This workshop requires additional hardware, as we need an embedded device with a
 
 Additionally to the common pre-requisites, you will need:
 
+* A GitHub account for logging in to the Drogue Cloud.
 * A Drogue Device supported development board and WiFi modem
-* A publicly accessible Drogue IoT Cloud instance running version 0.8+
 * Development tools: Git and Rust
 
 === Supported embedded device
@@ -24,4 +24,4 @@ You need a board with network connectivity, such as the https://www.st.com/en/ev
 
 === Drogue Cloud
 
-For this workshop, we recommend using the https://sandbox.drogue.cloud[Drogue Cloud Sandbox], but you can use your own instance of Drogue Cloud if you want to.
+For this workshop, we recommend using the https://sandbox.drogue.cloud[Drogue Cloud Sandbox], but you can use your own instance of Drogue Cloud if you do not wish to use the sandbox.

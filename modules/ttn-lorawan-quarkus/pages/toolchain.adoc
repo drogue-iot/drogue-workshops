@@ -23,30 +23,11 @@ Also see:
 
 By default, `rustup` will install a toolchain (compiler, …) for your current host architecture and operating system.
 
-However, when compiling a device firmware, we need to have a compiler for a different architecture (CPU). You can
-install additional toolchains on your machine. Execute the following command to install a toolchain for a Cortex-M
-style board:
-
-[source]
-----
-rustup target add thumbv6m-none-eabi
-----
-
-In many cases, you will also need a "nightly" (unreleased) version of the Rust compiler. You can easily install
-this in addition to the stable version be executing:
-
-[source]
-----
-rustup +nightly target add thumbv6m-none-eabi
-----
-
-NOTE: The nightly version of the compiler must be explicitly enabled. When installing it, it will not become the default.
-So, there is no harm in installing a nightly version.
+When compiling a device firmware, we need to have a compiler for a different architecture (CPU). The examples used in this workshop contain a rust-toolchain file which will tell rustup to automatically download the toolchain required for your board.
 
 == Additional tools
 
-In addition to the actual toolchain, you will need tools to flash the firmware to your device, and to monitor what
-is going on.
+In addition to the actual toolchain, you will need tools to flash the firmware to your device, and to monitor what is going on.
 
 There are a few tools for Rust which can help here. However, we will focus on the https://github.com/knurling-rs/probe-run[probe-run].
 
