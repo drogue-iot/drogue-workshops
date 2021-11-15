@@ -1,0 +1,11 @@
+= Summary
+
+That concludes the workshop! We've seen how you can use a WiFi-enabled microcontroller with a temperature sensor to send temperature data to Drogue Cloud, using the already available link:https://sandbox.drogue.cloud[sandbox].
+
+After making sure the telemetry events arrived at the cloud, we ran a simple WebAssembly application to demonstrate how you can consume events from Drogue Cloud websockets, using the publicly available drogue-public-temperature application available on the sandbox.
+
+We then saw how you tap into the event stream using Knative events and forward them to another data store used by Grafana to build a more powerful dashboard for long term monitoring of the event data.
+
+= Whats next?
+
+...
