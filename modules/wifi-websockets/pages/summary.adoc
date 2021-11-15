@@ -6,6 +6,10 @@ After making sure the telemetry events arrived at the cloud, we ran a simple Web
 
 We then saw how you tap into the event stream using Knative events and forward them to another data store used by Grafana to build a more powerful dashboard for long term monitoring of the event data.
 
-= Whats next?
+== Whats next?
 
-...
+With the end to end setup complete, you can adopt the architecture to your specific use case and go on from there. Some examples:
+
+* Create your own application instead of using `drogue-public-temperature`
+* Add more devices and more sensor data to the mix
+* Modify the device firmware to accept commands and send commands using the link:https://github.com/drogue-iot/rfcs/blob/main/active/0002-commands-apis.md[command API]
