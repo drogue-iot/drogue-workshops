@@ -1,0 +1,55 @@
+= Websocket Application
+
+Now that we have events flowing into Drogue Cloud, it's time to visualize the data. We'll start of with a web assembly application consuming events from the Websocket integration of Drogue Cloud.
+
+NOTE: You can use a pre-running instance of this application at link:https://drogue-iot.github.io/wasm-websocket-integration-example[https://drogue-iot.github.io/wasm-websocket-integration-example].
+
+Read on if you want to run this application locally as well:
+
+== Clone the Git repository
+
+Clone the git repository with the integration example:
+
+[source]
+----
+git clone https://github.com/drogue-iot/wasm-websocket-integration-example
+----
+
+For the next steps, make sure you have `npm` installed as listed in the prerequisites.
+
+== Installing the development tools
+
+To build the WASM application and test it locally, we need the `trunk` tool:
+
+[source]
+----
+cargo install trunk
+----
+
+== Running the application
+
+To build the application, we must first install the dependencies:
+
+[source]
+----
+npm install
+----
+
+Once installed, we can build and run the main application locally:
+
+[source]
+----
+trunk serve --port 8080
+----
+
+Open your browser at link:http://localhost:8080[http://localhost:8080], and you should see the temperature dashboard:
+
+image:temperature-opened.png[Opening temperature application]
+
+You can adjust the URL in the text field, but for this workshop you can just use the default URL.
+
+Click `Connect` to start plotting temperature data. After running for a while, you should see a graph, like this:
+
+image:temperature-connected.png[Plotting temperature events]
+
+Feel free to play around with the application and use it as a base for creating more advanced visuals of the data.

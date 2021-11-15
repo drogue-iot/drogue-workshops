@@ -3,4 +3,5 @@
 ** xref:toolchain.adoc[Embedded toolchain]
 ** xref:drogue-cloud.adoc[Drogue Cloud setup]
 ** xref:firmware.adoc[Device firmware]
+** xref:websocket.adoc[Websocket Application]
 ** xref:making-changes.adoc[Making changes]

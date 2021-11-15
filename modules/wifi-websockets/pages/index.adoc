@@ -16,7 +16,7 @@ Additionally to the common pre-requisites, you will need:
 
 * A GitHub account for logging in to the Drogue Cloud.
 * A Drogue Device supported development board and WiFi modem
-* Development tools: Git and Rust
+* Development tools: Git, Rust and Npm
 
 === Supported embedded device
 
