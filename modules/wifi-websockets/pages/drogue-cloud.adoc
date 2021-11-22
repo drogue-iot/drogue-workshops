@@ -7,7 +7,7 @@ We will need to create a new application inside Drogue Cloud and register a devi
 Log into the sandbox using the `drg` tool:
 [source]
 ----
-drg login https://sandbox.drogue.cloud
+drg login https://api.sandbox.drogue.cloud/
 ----
 
 == Create a new application
