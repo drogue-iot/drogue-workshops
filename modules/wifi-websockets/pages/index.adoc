@@ -22,6 +22,8 @@ Additionally to the common pre-requisites, you will need:
 
 You need a board with network connectivity, such as the https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html[STM32L4 IoT Discovery Kit]. You may also use a different board that can run Drogue Device. However, this means that you need to adapt the provided example firmware yourself.
 
+image:iot01a.png[The board using in this workshop]
+
 === Drogue Cloud
 
 For this workshop, we recommend using the https://sandbox.drogue.cloud[Drogue Cloud Sandbox], but you can use your own instance of Drogue Cloud if you do not wish to use the sandbox.
