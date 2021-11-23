@@ -4,12 +4,19 @@ That concludes the workshop! We've seen how you can use a WiFi-enabled microcont
 
 After making sure the telemetry events arrived at the cloud, we ran a simple WebAssembly application to demonstrate how you can consume events from Drogue Cloud websockets, using the publicly available drogue-public-temperature application available on the sandbox.
 
-We then saw how you tap into the event stream using Knative events and forward them to another data store used by Grafana to build a more powerful dashboard for long term monitoring of the event data.
+We then saw how you tap into the Websocket event stream and forward it to another data store used by Grafana to build a more powerful dashboard for long term monitoring of the telemetry data.
 
 == Whats next?
 
 With the end to end setup complete, you can adopt the architecture to your specific use case and go on from there. Some examples:
 
-* Create your own application instead of using `drogue-public-temperature`
 * Add more devices and more sensor data to the mix
 * Modify the device firmware to accept commands and send commands using the link:https://github.com/drogue-iot/rfcs/blob/main/active/0002-commands-apis.md[command API]
+
+On our side, the current Grafana example is just a first step in providing easy getting started telemetry application for Drogue Cloud. While it works nicely in the scenario we covered, there are a lot more we can improve upon:
+
+* Provide more integration options - current implementation supports only web sockets. We'd like to provide more connectivity options (MQTT and Kafka) and more resilience to connection handling
+* Run in serverless environment - Many cloud environments, like https://developers.redhat.com/developer-sandbox[Openshift developer sandbox] provide Servlerless/Knative support for its users. We should leverage it when we can and provide seamless integration.
+* Run outside of Kubernetes - Although Kubernetes is very popular today, there are many situation where you want to run an application like this without the access to the cluster. We should provide a way to run the application in plain Docker/Podman installations.
+
+So stay tuned!

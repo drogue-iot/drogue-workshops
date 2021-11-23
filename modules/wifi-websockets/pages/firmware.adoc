@@ -44,7 +44,7 @@ IMPORTANT: You need to have the developer board attached to your computer.
 
 [source]
 ----
-PROBE_RUN_CHIP=STM32L475VG cargo run --release --features b-l475e-iot01a,tls
+DEFMT_LOG=info PROBE_RUN_CHIP=STM32L475VG cargo run --release --features b-l475e-iot01a,tls
 ----
 
 == Checking the result
