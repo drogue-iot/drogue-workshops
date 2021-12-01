@@ -2,8 +2,6 @@
 
 The next step is to compile and flash the device's firmware.
 
-NOTE: There are two variants of the IoT01A board. Both should work, but this guide will use the parameters for the L475E variant.
-
 == Clone the Git repository
 
 Clone the git repository with the example and check out the `0.5.0` tag:
@@ -46,6 +44,9 @@ IMPORTANT: You need to have the developer board attached to your computer.
 ----
 DEFMT_LOG=info PROBE_RUN_CHIP=STM32L475VG cargo run --release --features b-l475e-iot01a,tls
 ----
+
+NOTE: You might have an IoT01A board with a different chip, e.g. `L4S5VI`. Please check your board and use appropriate
+value for the `PROBE_RUN_CHIP` variable , like `PROBE_RUN_CHIP=STM32L4S5VI`.
 
 == Checking the result
 
