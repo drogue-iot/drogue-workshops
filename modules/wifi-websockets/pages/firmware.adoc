@@ -24,15 +24,14 @@ hardware configuration!
 
 == Update the device configuration
 
-For the device to access your WiFi network, you must add the SSID and PSK to the following files:
+For the device to access your WiFi network and Drogue Cloud, you must add the WiFi and device credentials to the `~/.drogue/config.toml` file:
 
-`config/wifi.ssid.txt`:: The WiFi network SSID
-`config/wifi.password.txt`:: The WiFi network pre-shared key
-
-For the device to access Drogue Cloud, it also needs the device credentials you created earlier:
-
-`config/http.username.txt`:: The device username (I.e. `device1@wifi-workshop`)
-`config/http.password.txt`:: The device password (I.e. `mysecretpassword`)
+```toml
+wifi-ssid = "..."       # The WiFi network SSID
+wifi-password = "..."   # The WiFi network pre-shared key
+http-username = "..."   # The device username (I.e. `device1@wifi-workshop`)
+http-password = "..."   # The device password (I.e. `mysecretpassword`)
+```
 
 == Compile and flash
 
@@ -46,7 +45,12 @@ DEFMT_LOG=info PROBE_RUN_CHIP=STM32L475VG cargo run --release --features b-l475e
 ----
 
 NOTE: You might have an IoT01A board with a different chip, e.g. `L4S5VI`. Please check your board and use appropriate
-value for the `PROBE_RUN_CHIP` variable , like `PROBE_RUN_CHIP=STM32L4S5VI`.
+value for the `PROBE_RUN_CHIP` variable , like `PROBE_RUN_CHIP=STM32L4S5VI`:
+
+[source]
+----
+DEFMT_LOG=info PROBE_RUN_CHIP=STM32L4S5VI cargo run --release --features b-l4s5i-iot01a,tls
+----
 
 == Checking the result
 
