@@ -1,0 +1,8 @@
+* xref:index.adoc[From WiFi to Websocket]
+** xref:index.adoc[Overview]
+** xref:toolchain.adoc[Embedded toolchain]
+** xref:drogue-cloud.adoc[Drogue Cloud setup]
+** xref:firmware.adoc[Device firmware]
+** xref:websocket.adoc[Websocket Application]
+** xref:db-and-grafana.adoc[TimescaleDB and Grafana]
+** xref:summary.adoc[Summary]

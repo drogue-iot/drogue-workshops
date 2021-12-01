@@ -7,3 +7,4 @@ nav:
   - modules/external/nav.adoc
   - modules/ttn-lorawan-quarkus/nav.adoc
   - modules/quarkus-mqtt-starter/nav.adoc
+  - modules/wifi-websockets/nav.adoc

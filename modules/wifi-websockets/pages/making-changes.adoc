@@ -1,0 +1,60 @@
+:star: *
+
+= Making changes
+
+Now that we have a WiFi based end-to-end example, we are ready to make some changes.
+
+== Sending commands back
+
+Although reporting telemetry to the cloud is great, it gets even more interesting when you can send
+commands back to the device. 
+
+Lets change our application to send a command back if the reported temperature is too high.
+
+Here is what we need to change:
+
+* The device needs to keep an ON/OFF state, signaled by a LED
+* The cloud side application needs to evaluate if the temperature is too high
+* If it is, it needs to send out a command to the device to switch off
+
+== Changing the cloud side
+
+Let prepare the cloud side first.
+
+All that we need to do is to change the `Processor` class:
+
+[source,java]
+----
+----
+
+== Changing the device
+
+On the device side, we need to add a fake switch. Take a look at the file `main.rs`, and make the following changes:
+
+[source,rust,subs="verbatim,quotes,attributes+"]
+----
+----
+
+After making those changes, you should be able to compile and flash the firmware again using:
+
+[source]
+----
+cargo run --release
+----
+
+== Making tests
+
+Pretty easy, wasn't it? Noticed the bit of string handling on device side. And still, we are 100% sure we didn't create
+any memory leaks or invalid pointer access in the process thanks to Rust.
+
+So after the device is flashed, let's sit back and let the device report the temperatures for a
+while. Then, make the temperature rise by breathing on the temperature sensor on the board. The reported temperature
+should start to rise and the cloud will tell it to 'switch OFF'.
+
+== More ideas
+
+Now it is time to come up with your own ideas. You could:
+
+* Switch from sending string to some binary format, to make your messages more efficient.
+* You could come up with some more elaborate processing on the cloud side. Maybe tie in some external service for
+evaluating the _desired_ state of the heater.
