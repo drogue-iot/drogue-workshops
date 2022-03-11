@@ -1,0 +1,112 @@
+:experimental: true
+
+= Knative
+
+Using Knative, we will send data towards the Timescale database. Coming from an IoT world, protocols like MQTT and HTTP
+are much more common than "SQL". So we need to translate the data coming from our devices into SQL statements, and
+execute them against the Timescale database, using a PostgresSQL connection.
+
+== What's the plan?
+
+Assuming we receive "Cloud Events", that is actually rather simple: take the data, make an SQL statement, execute.
+Assuming further we already know the data format, that is just a few lines of code.
+
+However, we cannot just run a few lines of code. We need some service, some infrastructure, some storage, ... or, do we?
+
+That is where the "serverless" buzzwords comes into play. We focus on the actual code of the translation. A serverless
+stack will take care of running this. Ideal for this case.
+
+Going even further, we adopt "Knative" and "Knative eventing", which is based on "Cloud Events". And with that, we
+know how we receive our events, in which envelope format we get the event. The payload is still specific to our
+device.
+
+Still, what we can do, is to tap into the Knative eventing ecosystem, and pick an existing image, which takes care
+of extracting information from a JSON based payload using JSONPath, and assembling an SQL statement for us. That comes
+in the form of an existing container image, and all that we need to do is to configure it, using environment variables.
+
+If you are curious, you can check out the code at: https://github.com/drogue-iot/drogue-postgresql-pusher
+
+So all that we need to do, is to configure a service to run an existing container for us. Using Knative we get
+scalability, scale-down to zero, monitoring, A/B deployments, and much more for free.
+
+[NOTE]
+.Cost
+====
+Using Knative, we actually run user provided code. That is why it is pretty hard to create a "free tier" for a service
+like that. You could just mine bitcoins.
+
+So what we get is some free CPU time. Once we used that up, we will get charged. However, for a simple workshop like
+this, that is more than enough. And don't forget that when you don't use the service, it will idle and scale down to
+zero.
+====
+
+== Create a new project
+
+Log in to your IBM Cloud instance, and navigate to the "Code Engine" module. On the right-hand side, open the "Projects"
+view.
+
+We will create a new project for this tutorial, so go ahead and press the btn:[Create] button.
+
+On the creation page, select the location, and use `drogue-iot` as the project name:
+
+.Project creation
+image::ibm-create-project.png[Create a new project]
+
+Project creation can take a while. Once it is ready, navigate to the project overview page and click on the
+btn:[Create application] button:
+
+.Project overview page
+image::ibm-project-overview.png[Project overview]
+
+== Create application
+
+Creating a new application, we need to provide a name (use `pusher`) and choose "Container image" as code to run.
+The image to use is `ghcr.io/drogue-iot/postgresql-pusher:0.2.1`.
+
+The "listening port" is `8080` and the endpoint must be "Public".
+
+In the "Runtime settings" section, configure the smallest instance you can find (e.g. "0.125 vCPU / 0.25 GB"). We will
+be running a process written in the Rust language, which is highly efficient and not run into any limits.
+
+An important part is the section "Environment variables", as it will contain our configuration. Add the following
+entries by clicking on the btn:[Add] button, using a "Literal value" entry. The following table contains the
+information which needs to be added
+
+|===
+|Variable name | Value | Description
+
+| `ENDPOINT__TOKEN` | Some random value you define and recall later | The bearer token a caller needs to present in order to get access to the endpoint
+| `POSTGRESQL\__CONNECTION__HOST` | Hostname portion from the `psql` connection URL | The hostname of the TimescaleDB instance
+| `POSTGRESQL\__CONNECTION__PORT` | Port portion from the `psql` connection URL | The port of the TimescaleDB instance
+| `POSTGRESQL\__CONNECTION__DBNAME` | `tsdb` | The name of the database
+| `POSTGRESQL\__CONNECTION__USER` | `pusher` | The database user which has write-access
+| `POSTGRESQL\__CONNECTION__PASSWORD` | The password you in the previous section for the `pusher` database user | The password of the database user.
+| `POSTGRESQL__TABLE` | `temperatures` | The name of the table
+| `POSTGRESQL__TIME_COLUMN` | `time` | The name of the timestamp field
+| `FIELD_TEMPERATURE` | `$.temp` | The JSON path for extracting the temperature value from the actual payload
+| `TYPE_FIELD_TEMPERATURE` | `float` | The data type of the temperature
+| `TAG_DEVICE_ID` | `$.device` | The JSON path for extracting the device ID from the full event
+|===
+
+This should look something like this:
+
+.Section of the create application page
+image::ibm-create-app.png[Section of the create application page]
+
+Finally, click on the btn::[Create] button on the right-hand side, which will start the deployment process of the
+application.
+
+Once it is deployed correctly, the overview should look like this:
+
+.Application configuration screen
+image::ibm-app-ready.png[Application ready screen]
+
+Take a look at the "Endpoints" tab, and note down the "Public URL", which we will need later on.
+
+== What's next?
+
+We set up the service which translates the device payload into SQL statements for TimescaleDB. However, currently
+no one is sending data to this endpoint. And as long as that is the case, the service will be scaled down to zero
+and not consume any resources, or cost any money.
+
+So, it is time to send some data to this endpoint.
