@@ -7,7 +7,7 @@ As all paths lead to Timescale, this is the first component we will set up. This
 * Create two users for accessing the database
 
 [NOTE]
-.Cost
+.Costs
 ====
 An instance will cost a certain amount of money per hour. The amount depends on the resources you consume. The "bigger"
 your database is planned to be, the more it will cost.
@@ -42,14 +42,14 @@ In order to connect, we will need to connect to the database using a PostgreSQL 
 favorite operating system. Clicking on the "How to connect" button will open a dialog that will help you out with
 all the details.
 
-If you happen to use Fedora, you can simply install the PostgreSQL client using:
+If you use Fedora, you can simply install the PostgreSQL client by running:
 
 [source,bash]
 ----
 sudo dnf install postgresql
 ----
 
-When you have `psql`, just copy the command and get connected:
+When you have `psql` installed, just copy the command and get connected:
 
 [source]
 ----

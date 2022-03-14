@@ -4,6 +4,6 @@
 ** xref:timescale.adoc[Timescale]
 ** xref:knative.adoc[Knative]
 ** xref:drogue.adoc[Drogue Cloud]
-** xref:try.adoc[Try it out]
 ** xref:grafana.adoc[Grafana]
-** xref:conclusion.adoc[Conclusion]
+** xref:wait-there-is-more.adoc[Wait, there is more!]
+** xref:summary.adoc[Summary]

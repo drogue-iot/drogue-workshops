@@ -1,0 +1,8 @@
+= Wait, there is more!
+
+We got a nice IoT example set up. What we are missing, is data. So, let's generate some and see what we can do with
+it.
+
+== Generating data
+
+

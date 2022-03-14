@@ -6,6 +6,22 @@ Using Knative, we will send data towards the Timescale database. Coming from an 
 are much more common than "SQL". So we need to translate the data coming from our devices into SQL statements, and
 execute them against the Timescale database, using a PostgresSQL connection.
 
+We will perform the following steps:
+
+* Set up a new project
+* Create a Knative endpoint
+
+[NOTE]
+.Costs
+====
+Using Knative, we actually run user provided code. That is why it is pretty hard to create a "free tier" for a service
+like that. You could just mine bitcoins.
+
+So what we get is some free CPU time. Once we used that up, we will get charged. However, for a simple workshop like
+this, that is more than enough. And don't forget that when you don't use the service, it will idle and scale down to
+zero.
+====
+
 == What's the plan?
 
 Assuming we receive "Cloud Events", that is actually rather simple: take the data, make an SQL statement, execute.
@@ -28,17 +44,6 @@ If you are curious, you can check out the code at: https://github.com/drogue-iot
 
 So all that we need to do, is to configure a service to run an existing container for us. Using Knative we get
 scalability, scale-down to zero, monitoring, A/B deployments, and much more for free.
-
-[NOTE]
-.Cost
-====
-Using Knative, we actually run user provided code. That is why it is pretty hard to create a "free tier" for a service
-like that. You could just mine bitcoins.
-
-So what we get is some free CPU time. Once we used that up, we will get charged. However, for a simple workshop like
-this, that is more than enough. And don't forget that when you don't use the service, it will idle and scale down to
-zero.
-====
 
 == Create a new project
 

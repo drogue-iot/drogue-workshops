@@ -1,5 +1,0 @@
-= Trying it out
-
-== Publish data
-
-== Check result

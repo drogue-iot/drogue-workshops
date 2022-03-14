@@ -9,6 +9,12 @@ We will need to perform the following steps:
 * Register a new device
 * Finally, send some data
 
+[NOTE]
+.Costs
+====
+We will be using the public Drogue IoT sandbox, which is completely free for trying out Drogue IoT.
+====
+
 == Create application
 
 Log in to the public sandbox console, and navigate to the "Applications" view. Create a new application with

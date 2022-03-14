@@ -62,3 +62,8 @@ With Timescale, you will get 30 days free. That is all that we need.
 +
 We will use the "Grafana Cloud Free" plan for this tutorial.
 
+All the sign-op options are pretty straight forward. However, they also involve a few steps each, and may differ
+depending on who you are and where you are located. And maybe, you are already signed up to any of these services.
+
+That is why we don't provide step-by-step instructions, but hope that the provided links will give you a pointer
+into the right direction. If you run into any issues, please let us know.
