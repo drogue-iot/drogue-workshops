@@ -102,12 +102,10 @@ will create two users: one for writing data, one for reading data. Just as you w
 
 [source,sql]
 ----
-CREATE USER pusher;
-ALTER USER pusher WITH PASSWORD 'pusher-password';
+CREATE USER pusher WITH PASSWORD 'pusher-password';
 GRANT INSERT ON ALL TABLES IN SCHEMA public TO pusher;
 
-CREATE USER dashboard;
-ALTER USER dashboard WITH PASSWORD 'dashboard-password';
+CREATE USER dashboard WITH PASSWORD 'dashboard-password';
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO dashboard;
 ----
 
