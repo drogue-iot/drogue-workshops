@@ -121,7 +121,6 @@ menu:Settings[Variables] and add a new variable using the btn:[Add variable] but
 
 Enter the following information:
 
-
 |===
 |Setting |Value |Description
 
@@ -155,7 +154,7 @@ No worries, SQL has you covered, and you can use the following expression: `ANY(
 performs a check if the value of the field (`device_id`) is in the provided array. Which also is true if the array is
 empty.
 
-Apply the changes again, and you can now use drop-down labeled `Device` in the top of the dashboard:
+Apply the changes again. Then you can use the drop-down labeled `Device`, in the top of the dashboard:
 
 .Drop-down menu for the `device_id` variable
 image::grafana-add-filter.png[Drop-down menu for the `device_id` variable]
