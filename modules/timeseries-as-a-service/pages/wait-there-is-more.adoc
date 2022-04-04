@@ -1,8 +1,74 @@
+:experimental: true
+
 = Wait, there is more!
 
 We got a nice IoT example set up. What we are missing, is data. So, let's generate some and see what we can do with
 it.
 
 == Generating data
+
+Of course, you can set up a device and publish real data to the device you configured. However, explaining this make
+take some time, and we would like to keep this example focused on processing the data on the cloud side.
+
+However, for this workshop we are using our device simulator. Clicking on the following link, will open the simulator
+in your browser. It will simulate a device, using MQTT over websocket, and comes pre-configured with a slider, which
+is simulating the temperature value.
+
+NOTE: You will need to update the device credentials (application, device id, password) on the connection screen
+after loading.
+
+Click here: https://v1.device-simulator.com/?c=eyJhcHBsaWNhdGlvbiI6Im15LWFwcGxpY2F0aW9uIiwiYXV0b0Nvbm5lY3QiOmZhbHNlLCJkZXZpY2UiOiJteS1kZXZpY2UiLCJpbXBvcnQiOnsiaGludENvbm5lY3Rpb24iOnRydWV9LCJzaW11bGF0aW9ucyI6eyJ0ZW1wZXJhdHVyZSI6eyJzbGlkZXIiOnsiZGVsYXkiOiIxMDBtcyIsIm1heCI6MTU1NS4wLCJtaW4iOi0yNzMuMTUsInRhcmdldCI6eyJjaGFubmVsIjoic3RhdGUiLCJmZWF0dXJlIjoidGVtcGVyYXR1cmUiLCJwcm9wZXJ0eSI6InZhbHVlIn19fX0sInRhcmdldCI6eyJtcXR0Ijp7ImNyZWRlbnRpYWxzIjp7InBhc3N3b3JkIjoibXktcGFzc3dvcmQifSwidXJsIjoid3NzOi8vbXF0dC1lbmRwb2ludC13cy1icm93c2VyLWRyb2d1ZS1pb3QuYXBwcy53b25kZXJmdWwuaW90LXBsYXlncm91bmQub3JnL21xdHQifX19[open simulator^]
+
+== Update credentials
+
+Update the credentials on the "Connection" page. Activate them by pressing the btn:[Apply] button.
+
+[NOTE]
+.Persisting configuration
+====
+By default, all changes made to the simulator instance are temporary. Closing the browser tab will simply discard them.
+
+If you want to persist the changes, you can store one configuration as default. Navigate to the "Configuration" page,
+and click on the btn:[Set as default] button.
+====
+
+== Start the connection
+
+In order to let the simulator send data, you need to start the connection by pressing on the btn:[▶] button in the top
+right navigation area.
+
+== Send data
+
+Once the simulator is connected, you can control what value and when it is sent. Every time you move the slider, an
+update is sent to the cloud side. However, it will not send more than one value per 100ms.
+
+This means, you can now control aspects of the data: which value is sent, and when it is sent.
+
+Go ahead and create some data by moving the slider as you like. Maybe add a gap, by not touching it for a while.
+
+[TIP]
+.Alternative approach
+====
+Instead of using a slider, you can also re-configure the simulator to e.g. generate a sine wave automatically for you.
+You can either use the wizard or use the following snippet in the "Configuration" page:
+
+[source,yaml]
+----
+sine1:
+  sine:
+    amplitude: 100.0
+    length: 1m
+    period: 250ms
+    target:
+      channel: state
+      feature: temperature
+      property: value
+----
+
+In any case, be sure that you remove the slider simulation. Otherwise, the different simulations will overlap in their
+naming and the data look weird. Unless, that is what you want of course.
+====
+
+== Improving the dashboard query
 
 
