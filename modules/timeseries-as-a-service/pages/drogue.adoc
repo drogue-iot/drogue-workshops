@@ -90,14 +90,14 @@ created a table in the database. So, let's send some data (be sure to replace th
 
 [source,shell]
 ----
-curl -v -XPOST -u device1@my-application:my-password https://http.sandbox.drogue.cloud/v1/state -d '{"temp":42}'
+curl -v -XPOST -u device1@my-application:my-password https://http.sandbox.drogue.cloud/v1/state -d '{"features": {"temperature":{"value":42}}}'
 ----
 
 If you prefer MQTT, you can do the same using `mqtt`:
 
 [source,shell]
 ----
-mqtt pub -v -h mqtt.sandbox.drogue.cloud -p 443 -u 'device1@my-application' -pw 'my-password' -s -t telemetry -m '{"temp":42}'
+mqtt pub -v -h mqtt.sandbox.drogue.cloud -p 443 -u 'device1@my-application' -pw 'my-password' -s -t telemetry -m '{"features": {"temperature":{"value":42}}}'
 ----
 
 When the command has completed successfully, check the table with `psql`:

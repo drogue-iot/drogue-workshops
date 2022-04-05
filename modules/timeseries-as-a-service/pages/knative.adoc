@@ -88,7 +88,7 @@ information which needs to be added
 | `POSTGRESQL\__CONNECTION__PASSWORD` | The password you in the previous section for the `pusher` database user | The password of the database user.
 | `POSTGRESQL__TABLE` | `temperatures` | The name of the table
 | `POSTGRESQL__TIME_COLUMN` | `time` | The name of the timestamp field
-| `FIELD_TEMPERATURE` | `$.temp` | The JSON path for extracting the temperature value from the actual payload
+| `FIELD_TEMPERATURE` | `$.features.temperature.value` | The JSON path for extracting the temperature value from the actual payload
 | `TYPE_FIELD_TEMPERATURE` | `float` | The data type of the temperature
 | `TAG_DEVICE_ID` | `$.device` | The JSON path for extracting the device ID from the full event
 |===
