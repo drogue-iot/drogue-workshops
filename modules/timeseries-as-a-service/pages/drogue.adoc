@@ -1,3 +1,5 @@
+:experimental: true
+
 = Drogue Cloud
 
 Drogue Cloud is our IoT connectivity layer. It will offer the IoT specific endpoints, authenticate devices, and
@@ -17,7 +19,7 @@ We will be using the public Drogue IoT sandbox, which is completely free for try
 
 == Create application
 
-Log in to the public sandbox console, and navigate to the "Applications" view. Create a new application with
+Log in to the https://sandbox.drogue.cloud/[public sandbox console], and navigate to the "Applications" view. Create a new application with
 a unique name and remember that name.
 
 .New application dialog

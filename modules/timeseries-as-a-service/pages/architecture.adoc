@@ -15,10 +15,10 @@ Timescale database.
 **TimescaleDB** is the database, which will persist the data and serve queries coming from different applications
 interested in the data, like Grafana.
 
-**Grafana** will act as visualization too for the data.
+**Grafana** will act as visualization tool for the data.
 
-With the exception of Knative, we do re-use existing services, all managed for us. And for even Knative itself, we
-re-use and existing service and only need to focus on the actual translation of the data.
+With the exception of Knative, we do re-use existing services, all managed for us. And even for Knative itself, we
+re-use an existing service and only need to focus on the actual translation of the data.
 
 Using this architecture, we do indeed achieve both: keeping our own, existing datastructures, and on-boarding as many
 managed services as possible at the same time.

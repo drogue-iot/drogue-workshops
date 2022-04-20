@@ -2,7 +2,7 @@
 
 = Grafana
 
-Grafana is the tool we use to visualize the data we have in Timescale now. Setting it up will involve the following
+https://github.com/grafana/grafana[Grafana] is the tool we use to visualize the data we have in Timescale now. Setting it up will involve the following
 steps:
 
 * Create a new Grafana instance
@@ -18,7 +18,7 @@ of course re-use that instance too.
 
 == Create instance
 
-Log in to Grafana Cloud, and add a new stack using one of the btn:[Add stack] buttons. Select a region that matches
+Log in to https://grafana.com/products/cloud/[Grafana Cloud], and add a new stack using one of the btn:[Add stack] buttons. Select a region that matches
 the other services and an instance URL that works for you. Once the deployment is ready, just navigate your browser
 to the instance and sign in.
 

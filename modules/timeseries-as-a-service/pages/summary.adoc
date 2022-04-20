@@ -9,7 +9,7 @@ all of this. You can also try to swap out components and service offerings, as i
 
 == What's next?
 
-Using the same mechanism, you could of course push the data also do another service. Or maybe enrich or pre-process
+Using the same mechanism, you could of course push the data also to another service. Or maybe enrich or pre-process
 it using a Knative serverless function. Maybe build some application on top of the Timescale database, now that
 you have some data.
 

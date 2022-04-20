@@ -2,7 +2,7 @@
 
 = Knative
 
-Using Knative, we will send data towards the Timescale database. Coming from an IoT world, protocols like MQTT and HTTP
+Using https://knative.dev/[Knative], we will send data towards the Timescale database. Coming from an IoT world, protocols like MQTT and HTTP
 are much more common than "SQL". So we need to translate the data coming from our devices into SQL statements, and
 execute them against the Timescale database, using a PostgresSQL connection.
 
@@ -29,7 +29,7 @@ Assuming further we already know the data format, that is just a few lines of co
 
 However, we cannot just run a few lines of code. We need some service, some infrastructure, some storage, ... or, do we?
 
-That is where the "serverless" buzzwords comes into play. We focus on the actual code of the translation. A serverless
+That is where the "serverless" buzzword comes into play. We focus on the actual code of the translation. A serverless
 stack will take care of running this. Ideal for this case.
 
 Going even further, we adopt "Knative" and "Knative eventing", which is based on "Cloud Events". And with that, we
@@ -47,7 +47,7 @@ scalability, scale-down to zero, monitoring, A/B deployments, and much more for 
 
 == Create a new project
 
-Log in to your IBM Cloud instance, and navigate to the "Code Engine" module. On the right-hand side, open the "Projects"
+Log in to your https://www.ibm.com/cloud/code-engine[IBM Cloud instance], and navigate to the "Code Engine" module. On the right-hand side, open the "Projects"
 view.
 
 We will create a new project for this tutorial, so go ahead and press the btn:[Create] button.
@@ -71,7 +71,7 @@ The image to use is `ghcr.io/drogue-iot/postgresql-pusher:0.2.1`.
 The "listening port" is `8080` and the endpoint must be "Public".
 
 In the "Runtime settings" section, configure the smallest instance you can find (e.g. "0.125 vCPU / 0.25 GB"). We will
-be running a process written in the Rust language, which is highly efficient and not run into any limits.
+be running a process written in the Rust language, which is highly efficient and will not run into any limits.
 
 An important part is the section "Environment variables", as it will contain our configuration. Add the following
 entries by clicking on the btn:[Add] button, using a "Literal value" entry. The following table contains the
@@ -98,7 +98,7 @@ This should look something like this:
 .Section of the create application page
 image::ibm-create-app.png[Section of the create application page]
 
-Finally, click on the btn::[Create] button on the right-hand side, which will start the deployment process of the
+Finally, click on the btn:[Create] button on the right-hand side, which will start the deployment process of the
 application.
 
 Once it is deployed correctly, the overview should look like this:
@@ -110,7 +110,7 @@ Take a look at the "Endpoints" tab, and note down the "Public URL", which we wil
 
 == What's next?
 
-We set up the service which translates the device payload into SQL statements for TimescaleDB. However, currently
+We've set up the service which translates the device payload into SQL statements for TimescaleDB. However, currently
 no one is sending data to this endpoint. And as long as that is the case, the service will be scaled down to zero
 and not consume any resources, or cost any money.
 

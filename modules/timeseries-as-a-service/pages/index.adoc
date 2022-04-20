@@ -1,6 +1,6 @@
 = Time series database, as a service
 
-In this workshop, we will take a look at [TimescaleDB](https://github.com/timescale/timescaledb), a time series database based on PostgreSQL. Consuming measurements
+In this workshop, we will take a look at https://github.com/timescale/timescaledb[TimescaleDB], a time series database based on PostgreSQL. Consuming measurements
 from a (simulated) temperate sensor, translating the payload using Knative, and storing the outcome in TimescaleDB.
 
 And while all of these components are open source, and you can self-host any of this, we will use managed services all

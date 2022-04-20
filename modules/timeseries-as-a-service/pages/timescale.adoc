@@ -20,7 +20,7 @@ And in the end, if the data is important to you, why not spend a few bucks on so
 
 == Create instance
 
-Navigate your browser to the Timescale Cloud, and create a new instance.
+Navigate your browser to the https://www.timescale.com/timescale-signup[Timescale Cloud], and create a new instance.
 
 .Creation dialog
 image::timescale-create-instance.png[Create a new instance]
