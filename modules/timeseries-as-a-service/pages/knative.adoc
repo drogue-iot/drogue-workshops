@@ -45,37 +45,12 @@ If you are curious, you can check out the code at: https://github.com/drogue-iot
 So all that we need to do, is to configure a service to run an existing container for us. Using Knative we get
 scalability, scale-down to zero, monitoring, A/B deployments, and much more for free.
 
-== Create a new project
+We'll provide you with two options on where you can run your Knative function:
 
-Log in to your https://www.ibm.com/cloud/code-engine[IBM Cloud instance], and navigate to the "Code Engine" module. On the right-hand side, open the "Projects"
-view.
+- https://developers.redhat.com/developer-sandbox[OpenShift developer sandbox] - provides you with an quick getting started experience and a place where you can host your function up to 30 days for free
+- https://www.ibm.com/cloud/code-engine[IBM Cloud instance] - also provides you a free tier to start with, but offer you an option to automatically convert to paying option if you wish to run your function for a longer period of time.
 
-We will create a new project for this tutorial, so go ahead and press the btn:[Create] button.
-
-On the creation page, select the location, and use `drogue-iot` as the project name:
-
-.Project creation
-image::ibm-create-project.png[Create a new project]
-
-Project creation can take a while. Once it is ready, navigate to the project overview page and click on the
-btn:[Create application] button:
-
-.Project overview page
-image::ibm-project-overview.png[Project overview]
-
-== Create application
-
-Creating a new application, we need to provide a name (use `pusher`) and choose "Container image" as code to run.
-The image to use is `ghcr.io/drogue-iot/postgresql-pusher:0.2.1`.
-
-The "listening port" is `8080` and the endpoint must be "Public".
-
-In the "Runtime settings" section, configure the smallest instance you can find (e.g. "0.125 vCPU / 0.25 GB"). We will
-be running a process written in the Rust language, which is highly efficient and will not run into any limits.
-
-An important part is the section "Environment variables", as it will contain our configuration. Add the following
-entries by clicking on the btn:[Add] button, using a "Literal value" entry. The following table contains the
-information which needs to be added
+In both cases we need to configure our function with appropriate environment variables.
 
 |===
 |Variable name | Value | Description
@@ -92,6 +67,94 @@ information which needs to be added
 | `TYPE_FIELD_TEMPERATURE` | `float` | The data type of the temperature
 | `TAG_DEVICE_ID` | `$.device` | The JSON path for extracting the device ID from the full event
 |===
+
+As we'll see in the following section, these variables are configured differently with various providers, but the values are always the same.
+Now let's dig into the hosting our function.
+
+== OpenShift
+
+For OpenShift, log into the console, select "Administration" view and navigate to the "Serverless" section
+
+.Serverless section
+image::openshift-serverless.png[Serverless section]
+
+Now select the "Serving" menu anc click on the btn:[Create > Service] button. Here, you can enter the YAML definition of your function,
+with all necessary variables properly configured, like:
+
+[source,yaml]
+----
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: sample
+  namespace: dejan-bosanac-dev
+spec:
+  template:
+    spec:
+      containers:
+        - image: ghcr.io/drogue-iot/postgresql-pusher:0.2.1
+          env:
+            - name: ENDPOINT__TOKEN
+              value: "abcdef123456"
+            - name: POSTGRESQL__CONNECTION__HOST
+              value: "xxx.tsdb.cloud.timescale.com"
+            - name: POSTGRESQL__CONNECTION__PORT
+              value: "32740"
+            - name: POSTGRESQL__CONNECTION__DBNAME
+              value: "tsdb"
+            - name: POSTGRESQL__CONNECTION__USER
+              value: "pusher"
+            - name: POSTGRESQL__CONNECTION__PASSWORD
+              value: "pusher-password"
+            - name: POSTGRESQL__TABLE
+              value: "temperatures"
+            - name: POSTGRESQL__TIME_COLUMN
+              value: "time"
+            - name: FIELD_TEMPERATURE
+              value: "$.features.temperature.value"
+            - name: TYPE_FIELD_TEMPERATURE
+              value: "float"
+            - name: TAG_DEVICE_ID
+              value: "$.device"
+----
+
+Now you have your serverless function ready to use and you can copy it's URL for future use.
+
+.Service overview
+image::openshift-service-ready.png[Service overview]
+
+== IBM Cloud
+
+=== Create a new project
+
+If you choose to use IBM Cloud instance, log in to your and navigate to the "Code Engine" module. On the right-hand side, open the "Projects"
+view.
+
+We will create a new project for this tutorial, so go ahead and press the btn:[Create] button.
+
+On the creation page, select the location, and use `drogue-iot` as the project name:
+
+.Project creation
+image::ibm-create-project.png[Create a new project]
+
+Project creation can take a while. Once it is ready, navigate to the project overview page and click on the
+btn:[Create application] button:
+
+.Project overview page
+image::ibm-project-overview.png[Project overview]
+
+=== Create application
+
+Creating a new application, we need to provide a name (use `pusher`) and choose "Container image" as code to run.
+The image to use is `ghcr.io/drogue-iot/postgresql-pusher:0.2.1`.
+
+The "listening port" is `8080` and the endpoint must be "Public".
+
+In the "Runtime settings" section, configure the smallest instance you can find (e.g. "0.125 vCPU / 0.25 GB"). We will
+be running a process written in the Rust language, which is highly efficient and will not run into any limits.
+
+An important part is the section "Environment variables", as it will contain our configuration. Here we need to add function configuration
+by clicking on the btn:[Add] button, using a "Literal value" entry.
 
 This should look something like this:
 

@@ -20,7 +20,7 @@ interested in the data, like Grafana.
 With the exception of Knative, we do re-use existing services, all managed for us. And even for Knative itself, we
 re-use an existing service and only need to focus on the actual translation of the data.
 
-Using this architecture, we do indeed achieve both: keeping our own, existing datastructures, and on-boarding as many
+Using this architecture, we do indeed achieve both: keeping our own, existing data structures, and on-boarding as many
 managed services as possible at the same time.
 
 Some solutions do offer you the ability to convert data using a script language, like JavaScript, in the processing.
