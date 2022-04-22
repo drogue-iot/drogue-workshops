@@ -78,7 +78,7 @@ For OpenShift, log into the console, select "Administration" view and navigate t
 .Serverless section
 image::openshift-serverless.png[Serverless section]
 
-Now select the "Serving" menu anc click on the btn:[Create > Service] button. Here, you can enter the YAML definition of your function,
+Now select the "Serving" menu and click on the btn:[Create > Service] button. Here, you can enter the YAML definition of your function,
 with all necessary variables properly configured, like:
 
 [source,yaml]
@@ -118,7 +118,7 @@ spec:
               value: "$.device"
 ----
 
-Now you have your serverless function ready to use and you can copy it's URL for future use.
+After you create it, you'll have your serverless function ready to use and you can copy its URL for future use.
 
 .Service overview
 image::openshift-service-ready.png[Service overview]
