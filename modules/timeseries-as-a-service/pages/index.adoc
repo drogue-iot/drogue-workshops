@@ -51,7 +51,11 @@ As we will be consuming managed services, you need to sign-up for free tiers on:
 * The Drogue IoT Cloud public sandbox: https://sandbox.drogue.cloud
 +
 All you need is a GitHub account, in order to sign up for the public sandbox.
-* An IBM cloud account: https://www.ibm.com/cloud/free
+* For Knative, either:
+** An OpenShift developer sandbox instance: https://developers.redhat.com/developer-sandbox/get-started
++
+You can go without a credit card for 30 days
+** Or, an IBM cloud account: https://www.ibm.com/cloud/free
 +
 You will need to register a credit card, as this will unlock more (free) services, mainly "Code Engine", which we will
 require for this tutorial.
