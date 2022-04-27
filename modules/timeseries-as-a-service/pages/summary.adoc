@@ -1,17 +1,18 @@
 = Conclusion
 
 With a few managed services, you can create an end-to-end IoT scenario. Ingesting the data using MQTT, delivering it
-to a Knative serverless endpoint, storing it in a time-series database, and visualizing it. All with open source, and
-yet managed for you.
+to a Knative serverless endpoint, storing it in a time-series database, and visualizing it. All with open source and
+still, managed for you.
 
 Of course, I would encourage you to get everything deployed locally. Just to see that you can indeed self-host
 all of this. You can also try to swap out components and service offerings, as it is an open architecture.
 
 == What's next?
 
-Using the same mechanism, you could of course push the data also to another service. Or maybe enrich or pre-process
-it using a Knative serverless function. Maybe build some application on top of the Timescale database, now that
-you have some data.
+Using the same mechanism, you could of course also push the data to another service. Or maybe enrich or pre-process
+it using a Knative serverless function. You could also build some application on top of the Timescale database, now that
+you have some data. Or if you like to work with SQL, create some fancy queries, and learn about the advanced
+features of TimescaleDB.
 
 == Also see
 
