@@ -1,0 +1,125 @@
+:experimental: true
+
+= Drogue Cloud
+
+Drogue Cloud is our IoT connectivity layer. It will offer the IoT specific endpoints, authenticate devices, and
+normalize events.
+
+We will need to perform the following steps:
+
+* Create a new application
+* Register a new device
+* Finally, send some data
+
+[NOTE]
+.Costs
+====
+We will be using the public Drogue IoT sandbox, which is completely free for trying out Drogue IoT.
+====
+
+== Create application
+
+Log in to the https://sandbox.drogue.cloud/[public sandbox console], and navigate to the "Applications" view. Create a new application with
+a unique name and remember that name.
+
+.New application dialog
+image::drogue-create-app.png[Application creation dialog]
+
+Once it is created, we need to configure the event source, sending data to our Knative endpoint. For this we
+need the following information from the previous steps:
+
+* Public endpoint URL
+* Endpoint token
+
+Go to the "YAML" tab of the application, and edit the `.spec` section (create one if there is none):
+
+[source,yaml]
+----
+spec:
+  knative:
+    endpoint:
+      url: https://pusher.your-public-url.codeengine.appdomain.cloud # <1>
+      auth:
+        bearer:
+          token: abcdef123456 # <2>
+----
+<1> Public URL of Knative endpoint
+<2> Token configured in the Knative endpoint
+
+After storing the configuration, the changes will be applied. After a bit, the state should change back to "Ready"
+and in the YAML section, you should see the condition `KnativeReady` in the section `.status.conditions` to become `True`.
+Currently, you need to reload the data to see the change.
+
+== Register device
+
+Now we need to register a new device. While we don't use any physical device, the procedure is the same for simulating
+one using e.g. `curl`, `http` or `mqtt`.
+
+Navigate to the "Devices" view, and select your application from the drop-down in the top. Use the btn:[New device]
+button to create a new device named `device1`:
+
+.Dialog to create a new device
+image::drogue-create-device.png[Device creation dialog]
+
+The newly created device does not have any credentials assigned, so it currently cannot be used to connect. For the
+sake of simplicity, we will just add a plain text password to the device. Navigate to the "YAML" tab of the device and
+add the following:
+
+[source,yaml]
+----
+spec:
+  credentials:
+    credentials: # <1>
+      - pass: my-password # <2>
+----
+<1> Indeed, the `credentials` field contains another field named `credentials`.
+<2> The password, stored plain text
+
+.Plain text passwords
+[TIP]
+====
+Storing passwords plain text might not be a good idea. Don't worry, Drogue Cloud can make use of hashed passwords or
+X.509 client certificates.
+
+Using the command line tool `drg`, you can make use of them pretty easily. But for this tutorial, we wanted to stick
+to the web browser.
+====
+
+== Send some data
+
+We are good to go for a first test. We wired up Drogue Cloud with TimescaleDB using Knative, registered a device, and
+created a table in the database. So, let's send some data (be sure to replace the application and password):
+
+[source,shell]
+----
+curl -v -XPOST -u device1@my-application:my-password https://http.sandbox.drogue.cloud/v1/state -d '{"features": {"temperature":{"value":42}}}'
+----
+
+If you prefer MQTT, you can do the same using `mqtt`:
+
+[source,shell]
+----
+mqtt pub -v -h mqtt.sandbox.drogue.cloud -p 443 -u 'device1@my-application' -pw 'my-password' -s -t telemetry -m '{"features": {"temperature":{"value":42}}}'
+----
+
+When the command has completed successfully, check the table with `psql`:
+
+[source]
+----
+tsdb=> select * from temperatures;
+             time              | device_id | temperature
+-------------------------------+-----------+-------------
+ 2022-03-11 16:41:44.799424+00 | device1   |          42
+(1 row)
+
+tsdb=>
+----
+
+Yay!
+
+== What's next?
+
+So, we wired it all up and data ends up in the Timescale database.
+
+Now comes the fun part, as we want to make use of that data and leverage the powers of TimescaleDB, and draw some
+nice charts.

@@ -1,0 +1,182 @@
+:experimental: true
+
+= Wait, there is more!
+
+CAUTION: WORK IN PROGRESS!
+
+We got a nice IoT example set up. What we are missing, is data. So, let's generate some and see what we can do with
+it.
+
+== Generating data
+
+Of course, you can set up a device and publish real data to the device you configured. However, explaining this may
+take some time, and we would like to keep this example focused on part of processing the data on the cloud side.
+
+So, for this workshop we are using our device simulator. Clicking on the following link, will open the simulator
+in your browser. It will simulate a device using MQTT over websocket, and comes pre-configured with a sine wave
+generator, which generates an artificial temperature value.
+
+NOTE: You will need to update the device credentials (application, device id, password) on the connection screen
+after loading.
+
+Click here: https://v1.device-simulator.com/?c=eyJhcHBsaWNhdGlvbiI6Im15LWFwcGxpY2F0aW9uIiwiYXV0b0Nvbm5lY3QiOmZhbHNlLCJkZXZpY2UiOiJteS1kZXZpY2UiLCJpbXBvcnQiOnsiaGludENvbm5lY3Rpb24iOnRydWV9LCJzaW11bGF0aW9ucyI6eyJ0ZW1wZXJhdHVyZSI6eyJ3YXZlIjp7ImFtcGxpdHVkZXMiOls1LjAsMjAuMCwxLjBdLCJsZW5ndGhzIjpbIjFoIiwiNW0iLCIxMHMiXSwib2Zmc2V0IjoyMC4wLCJwZXJpb2QiOiIyNTBtcyIsInRhcmdldCI6eyJjaGFubmVsIjoic3RhdGUiLCJmZWF0dXJlIjoidGVtcGVyYXR1cmUiLCJwcm9wZXJ0eSI6InZhbHVlIn19fX0sInRhcmdldCI6eyJtcXR0Ijp7ImNyZWRlbnRpYWxzIjp7InBhc3N3b3JkIjoibXktcGFzc3dvcmQifSwidXJsIjoid3NzOi8vbXF0dC1lbmRwb2ludC13cy1icm93c2VyLWRyb2d1ZS1pb3QuYXBwcy53b25kZXJmdWwuaW90LXBsYXlncm91bmQub3JnL21xdHQifX19[open simulator^]
+
+== Update credentials
+
+Update the credentials on the "Connection" page. Activate them by pressing the btn:[Apply] button.
+
+[NOTE]
+.Persisting configuration
+====
+By default, all changes made to the simulator instance are temporary. Closing the browser tab will simply discard them.
+
+If you want to persist the changes, you can store one configuration as default. Navigate to the "Configuration" page,
+and click on the btn:[Set as default] button.
+====
+
+== Start the connection
+
+In order to let the simulator send data, you need to start the connection by pressing on the btn:[▶] button in the top
+right navigation area.
+
+== Send data
+
+Once the simulator is connected, it will start sending data towards the system with a 250ms update period. You should
+also see the data coming in the Grafana dashboard.
+
+Keep the simulator running for a while, and don't close the tab. Maybe grab a coffee and check out the data when you
+come back.
+
+Maybe also disconnect the simulator for a few minutes, and reconnect it afterwards, letting it push some more data
+(simulating a gap in the data too)
+
+== Improving the dashboard query
+
+Now that we have more data pushed to TimescaleDB, let's focus on the dashboard query a bit. The current query we have
+in Grafana is a pretty basic one. Great to get started, but TimescaleDB can do way better.
+
+Let's take a look at the following query:
+
+[source,sql]
+----
+SELECT $__timeGroup("time", $__interval, NULL), device_id as metric, avg(avg(temperature)) OVER w as temp
+FROM temperatures
+WHERE
+  $__timeFilter("time") AND
+  device_id = ANY(ARRAY[$device_id]::varchar[])
+GROUP BY time, device_id
+WINDOW w as (PARTITION BY device_id ORDER BY time RANGE '1 minute'::INTERVAL PRECEDING)
+ORDER BY time, device_id
+----
+
+CAUTION: Prevents duplicate time entries. But re-runs average.
+
+[source,sql]
+----
+SELECT time, metric, avg(temp) FROM (
+
+SELECT $__timeGroup("time", $__interval, NULL), device_id AS metric, avg(avg(temperature)) OVER w AS temp
+FROM temperatures
+WHERE
+  $__timeFilter("time") AND
+  device_id = ANY(ARRAY[$device_id]::varchar[])
+GROUP BY time, device_id
+WINDOW w as (PARTITION BY device_id ORDER BY time RANGE '1 minute'::INTERVAL PRECEDING)
+ORDER BY time, device_id
+
+) grouped_temps
+GROUP BY time, metric
+----
+
+In a nutshell, this query takes the data, and builds a moving average over a time period of 1 minute. Portioning the
+data by device, so that the moving average is build for each device, instead of over all devices. It will also not just
+skip gaps, but actively report them using `NULL` as value. This can be used in Grafana to make the user aware of
+the gaps, rather than just drawing a straight line.
+
+In addition to the existing query, add a new panel in the Grafana dashboard. Using the query from above. Apply and
+save, and then take a look at the different visualization of the data:
+
+image::more-grafana-moving-average.png[Screenshot of moving average]
+
+You can see that the measurement is much smoother now. Still, internally you have the actual, raw data available. Also,
+it is pretty easy to spot the gap in the data. In both variants. Bust just assume how that would look if the data
+would not be in such a predictable pattern. You might actually miss if the sensor value is a flat line, or if it was a
+gap in the data.
+
+== Better partitioning
+
+Of course, in the background, TimescaleDB knows how to best optimize the data and queries. By transforming the standard
+table into a "hypertable" earlier on, we allowed the database to create chunks of data, grouped by time. When building
+a Grafana dashboard, showing the last 30 minutes of data, some chunks might not even be touched when collecting
+the data.
+
+However, we can do even better. Remember that we allow the user to filter by device, and also used the "device id"
+when partitioning the data for the moving average. We could add the device ID as an additional portioning dimension.
+
+Execute the following statement using the `psql` tool:
+
+[source,sql]
+----
+CREATE TABLE temperatures2
+(
+    time            TIMESTAMP WITH TIME ZONE NOT NULL,
+
+    device_id       VARCHAR(64)              NOT NULL,
+
+    temperature     DOUBLE PRECISION         NOT NULL
+);
+
+SELECT create_hypertable('temperatures2', 'time', partitioning_column => 'device_id', number_partitions => 3);
+INSERT INTO temperatures2 (SELECT * FROM temperatures);
+
+-- now swap tables
+ALTER TABLE temperatures RENAME TO temperatures_old;
+ALTER TABLE temperatures2 RENAME TO temperatures;
+DROP TABLE temperatures_old;
+
+GRANT INSERT ON ALL TABLES IN SCHEMA public TO pusher;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO dashboard;
+----
+
+== Materializing queries
+
+[source,sql]
+----
+CREATE MATERIALIZED VIEW temperature_summary_minute
+WITH (timescaledb.continuous) AS
+SELECT
+   time_bucket_gapfill(INTERVAL '1 minute', time, NULL) AS ts,
+   device_id,
+   AVG(temperature) as temperature
+FROM temperatures
+GROUP BY ts, device_id;
+
+SELECT add_continuous_aggregate_policy('temperature_summary_minute',
+     start_offset => INTERVAL '1 month',
+     end_offset => INTERVAL '1 minute',
+     schedule_interval => INTERVAL '1 minute');
+
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO dashboard;
+
+DROP MATERIALIZE VIEW temperature_summary_minute;
+----
+
+== Just testing
+
+[source,sql]
+----
+SELECT ts, metric, avg(temp) FROM (
+
+SELECT time_bucket('10s',"time") AS ts, device_id as metric, avg(avg(temperature)) OVER w as temp
+FROM temperatures
+WHERE
+  "time" BETWEEN now() - INTERVAL '5m' AND NOW() AND
+  device_id = 'device1'
+GROUP BY ts, time, device_id
+WINDOW w as (PARTITION BY device_id ORDER BY time RANGE '1 minute'::INTERVAL PRECEDING)
+ORDER BY ts, device_id
+
+) grouped_temps
+GROUP BY ts, metric
+;
+----

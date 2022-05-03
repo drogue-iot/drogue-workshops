@@ -8,3 +8,4 @@ nav:
   - modules/ttn-lorawan-quarkus/nav.adoc
   - modules/quarkus-mqtt-starter/nav.adoc
   - modules/wifi-websockets/nav.adoc
+  - modules/timeseries-as-a-service/nav.adoc

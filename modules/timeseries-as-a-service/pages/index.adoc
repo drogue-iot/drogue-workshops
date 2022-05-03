@@ -1,0 +1,73 @@
+= Time series database, as a service
+
+In this workshop, we will take a look at https://github.com/timescale/timescaledb[TimescaleDB], a time series database based on PostgreSQL. Consuming measurements
+from a (simulated) temperate sensor, translating the payload using Knative, and storing the outcome in TimescaleDB.
+
+And while all of these components are open source, and you can self-host any of this, we will use managed services all
+the way. Why? Just to prove that you can have both, the freedom of open source and the comfort of letting someone else
+maintain the service. Keeping you in control of the data.
+
+== Introduction
+
+A common IoT application is to just store telemetry data from sensors and devices into a database, in order to store
+and analyze it immediately, or at a later time.
+
+Measurements coming from IoT devices however are a bit different from other data, which you would store in a database.
+First of all, this can get massive. Consider the number of sensors you have, times the number of measurements you
+want to take per time period. If you want to store temperate data for years, in high resolution, in order to be able
+to create some analytic models and prediction from it, that can take up some amount of space.
+
+In addition, IoT measurement data is an approximation in most cases. Sensors quantize the real world, and optimize
+the data for efficient transmission to some more central location, mainly "the cloud", today. Putting back the snippets
+of data together again on the analytics side requires some mathematical effort.
+
+Time series database is specialized for use cases like that. Instead of storing complex relational data, they focus on
+a series of measurements through time. Allowing for some optimizations when storing data: like compressing redundant
+information, or organizing data in clusters. At the same time, supporting the user to write queries, helping with factor
+of time.
+
+Just to give a simple example: Consider a temperature measurement, sent to the cloud every second, for thousands
+of devices. This is easy to store, as you simply need to store a tuple of: timestamp, device, value. Any database can
+handle this. However, a time series database could collapse redundant information like repeating temperature values,
+and at the same optimize the query to provide accurate information over the queried time range, including aggregations
+like a moving average.
+
+== Costs
+
+There is no cloud, just other people's computers. And of course the time and effort to maintain a service for you.
+
+So managed services will have a cost attached. And someone needs to pay for that. Many service providers try to
+offer you a "free tier" or give you a free budget that you can work with.
+
+This tutorial will be limited to using "free" services only. In some cases this means you will still need to provide
+a credit card, as in theory, you could go above the free tier usage pattern. Rest assured, we will not.
+
+However, if you consider a service to add value to your use case, then consider spending the money.
+
+== Pre-requisites
+
+As we will be consuming managed services, you need to sign-up for free tiers on:
+
+* The Drogue IoT Cloud public sandbox: https://sandbox.drogue.cloud
++
+All you need is a GitHub account, in order to sign up for the public sandbox.
+* For Knative, either:
+** An OpenShift developer sandbox instance: https://developers.redhat.com/developer-sandbox/get-started
++
+You can go without a credit card for 30 days
+** Or, an IBM cloud account: https://www.ibm.com/cloud/free
++
+You will need to register a credit card, as this will unlock more (free) services, mainly "Code Engine", which we will
+require for this tutorial.
+* A TimescaleDB instance: https://www.timescale.com/timescale-signup
++
+With Timescale, you will get 30 days free. That is all that we need.
+* Grafana Cloud: https://grafana.com/auth/sign-up/create-user
++
+We will use the "Grafana Cloud Free" plan for this tutorial.
+
+All the sign-op options are pretty straightforward. However, they also involve a few steps each, and may differ
+depending on who you are and where you are located. And maybe, you are already signed up for any of these services.
+
+That is why we don't provide step-by-step instructions, but hope that the provided links will give you a pointer
+into the right direction. If you run into any issues, please let us know.

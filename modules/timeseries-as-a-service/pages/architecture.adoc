@@ -1,0 +1,33 @@
+= Architecture
+
+The overall architecture of this tutorial looks like this:
+
+.Architecture overview
+image::architecture.svg[Overall architecture]
+
+**Drogue Cloud** will receive the telemetry data from the devices. It will authenticate and authorize the devices,
+normalize the events into "Cloud Events", but keep the payload unchanged. The events will be pushed to a Knative
+serving endpoint.
+
+**Knative** will host an endpoint, which receives Cloud Events, and translates them into insert statement for the
+Timescale database.
+
+**TimescaleDB** is the database, which will persist the data and serve queries coming from different applications
+interested in the data, like Grafana.
+
+**Grafana** will act as visualization tool for the data.
+
+With the exception of Knative, we do re-use existing services, all managed for us. And even for Knative itself, we
+re-use an existing service and only need to focus on the actual translation of the data.
+
+Using this architecture, we do indeed achieve both: keeping our own, existing data structures, and on-boarding as many
+managed services as possible at the same time.
+
+Some solutions do offer you the ability to convert data using a script language, like JavaScript, in the processing.
+However, with existing data models and formats, you most likely already have code to process your data, but not
+necessarily in JavaScript. Or using the limited subset of JavaScript that the solution allows you to use.
+
+Having Knative in the mix, you can leverage your full existing portfolio of code, and favorite programming language
+to do the job. Still, you only need to focus on the actual translation. Deploying, scheduling, and scaling is all
+part of a Knative. And it will even scale down to zero. So if you don't use it, you don't pay for it.
+
