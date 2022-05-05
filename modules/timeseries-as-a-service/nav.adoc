@@ -1,4 +1,4 @@
-* xref:index.adoc[Time series database, as a service]
+* xref:index.adoc[Time series data, as a service]
 ** xref:index.adoc[Introduction]
 ** xref:architecture.adoc[Architecture]
 ** xref:timescale.adoc[Timescale]
