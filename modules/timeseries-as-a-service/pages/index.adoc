@@ -1,7 +1,8 @@
-= Time series data, as a service
+= Time series data, using managed services
 
-In this workshop, we will take a look at https://github.com/timescale/timescaledb[TimescaleDB], a time series database based on PostgreSQL. Consuming measurements
-from a (simulated) temperate sensor, translating the payload using Knative, and storing the outcome in TimescaleDB.
+In this workshop, we will take a look at https://github.com/timescale/timescaledb[TimescaleDB], a time series database
+based on PostgreSQL. Consuming measurements from a (simulated) temperate sensor, translating the payload using
+Knative, and storing the outcome in TimescaleDB. Visualizing the results with Grafana.
 
 And while all of these components are open source, and you can self-host any of this, we will use managed services all
 the way, not only for the time series database.
