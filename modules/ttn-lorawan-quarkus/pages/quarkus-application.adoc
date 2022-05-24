@@ -146,7 +146,7 @@ mvn quarkus:dev
 
 The output should look something like:
 
-[source,subs="verbatim,quotes"]
+[source,subs="verbatim,macros"]
 ----
 [INFO] Scanning for projects...
 [INFO]
@@ -163,10 +163,10 @@ __  ____  __  _____   ___  __ ____  ______
  --/ __ \/ / / / _ | / _ \/ //_/ / / / __/
  -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \
 --\___\_\____/_/ |_/_/|_/_/|_|\____/___/
-2021-05-04 08:43:08,141 INFO  [io.quarkus] (Quarkus Main Thread) quarkus-mqtt-integration-example 1.0.0-SNAPSHOT on JVM (powered by Quarkus 1.13.2.Final) started in 1.512s. Listening on: *http://localhost:8080* <1>
+2021-05-04 08:43:08,141 INFO  [io.quarkus] (Quarkus Main Thread) quarkus-mqtt-integration-example 1.0.0-SNAPSHOT on JVM (powered by Quarkus 1.13.2.Final) started in 1.512s. Listening on: pass:c,q[*http://localhost:8080*] <1>
 2021-05-04 08:43:08,144 INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
 2021-05-04 08:43:08,144 INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [cdi, mutiny, oidc-client, resteasy-reactive, resteasy-reactive-jackson, smallrye-context-propagation, smallrye-health, smallrye-reactive-messaging, smallrye-reactive-messaging-mqtt, vertx]
-2021-05-04 08:43:08,366 INFO  [io.ver.mqt.imp.MqttClientImpl] (vert.x-eventloop-thread-0) *Connection with mqtt-integration-drogue-dev.apps.wonderful.iot-playground.org:443 established successfully* <2>
+2021-05-04 08:43:08,366 INFO  [io.ver.mqt.imp.MqttClientImpl] (vert.x-eventloop-thread-0) pass:c,q[ *Connection with mqtt-integration-drogue-dev.apps.wonderful.iot-playground.org:443 established successfully*] <2>
 ----
 <1> The URL to the web console
 <2> Note the line "Connection … established successfully"
