@@ -80,19 +80,6 @@ Drogue Cloud instance may be paired with an external identity provider, like Git
 will be directed to the Drogue Cloud, which will then redirect to the local `drg` instance, receiving the
 OAuth2 access token.
 
-`drg` will ask you to enter a new _context name_, which you can use later on to switch logins for different instances.
-
-[NOTE]
-====
-Logging in will not switch your current context to the newly logged in one. If you want to use the login just
-created, you will need to switch context:
-
-[source]
-----
-drg context set-active <context_id>
-----
-====
-
 From now on, `drg` has access to your Drogue Cloud instance. When the access token expires, it will automatically
 fetch a fresh token, using the stored refresh token. Your password, is not stored locally.
 
