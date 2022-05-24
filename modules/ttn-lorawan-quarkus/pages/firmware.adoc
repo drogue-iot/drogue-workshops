@@ -24,11 +24,15 @@ hardware configuration!
 
 == Update the device configuration
 
-Locate the Device EUI, Application EUI, and Application Key, you created earlier. Add the keys into the following files:
+Locate the Device EUI, Application EUI, and Application Key, you created earlier. Add the keys into the following lines
+in `$HOME/.drogue/config.toml`:
 
-`lora-discovery/config/app_eui.txt`:: The Application EUI
-`lora-discovery/config/dev_eui.txt`:: The Device EUI
-`lora-discovery/config/app_key.txt`:: The Application Key
+[source]
+----
+app-qui = "<The Application EUI>"
+dev-eui = "<The Device EUI>"
+app-key = "<The Application Key>"
+----
 
 == Compile and flash
 
