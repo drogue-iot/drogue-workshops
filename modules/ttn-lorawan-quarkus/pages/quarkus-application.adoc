@@ -26,7 +26,7 @@ herefootnote:[API keys don't expire, while OAuth access tokens do. Even when you
 a refresh token, you still need to do this.].
 
 Getting a new API key currently requires to use a command line HTTP client, like HTTPie or curl. It is a simple
-operation though, and we will use `drg token` to acquire a fresh OAuth token for accessing the API.
+operation though, and we will use `drg whoami --token` to acquire a fresh OAuth token for accessing the API.
 
 The following examples require you to replace `<api-endpoint>` with the actual API endpoint. You can get this from
 the web console, from the page named "Home":
@@ -42,7 +42,7 @@ use `jq`, you can also omit it as is it only used to improve readability of the 
 
 [source]
 ----
-curl -vs -H "Authorization: Bearer $(drg token)" -XPOST <api-endpoint>/api/keys/v1alpha1 | jq
+curl -vs -H "Authorization: Bearer $(drg whoami --token)" -XPOST <api-endpoint>/api/keys/v1alpha1 | jq
 ----
 
 The output should look something like:
@@ -64,7 +64,7 @@ You can also list your existing API keys using:
 
 [source]
 ----
-curl -s -H "Authorization: Bearer $(drg token)" <api-endpoint>/api/keys/v1alpha1 | jq
+curl -s -H "Authorization: Bearer $(drg whoami --token)" <api-endpoint>/api/keys/v1alpha1 | jq
 ----
 
 Which should provide you can output like:
@@ -87,7 +87,7 @@ If you need to delete a key, you can easily achieve this using the `DELETE` verb
 
 [source]
 ----
-curl -s -H "Authorization: Bearer $(drg token)" -XDELETE <api-endpoint>/api/keys/v1alpha1/drg_g0yAUq
+curl -s -H "Authorization: Bearer $(drg whoami --token)" -XDELETE <api-endpoint>/api/keys/v1alpha1/drg_g0yAUq
 ----
 
 === Finding your username
