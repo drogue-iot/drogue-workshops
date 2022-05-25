@@ -18,14 +18,14 @@ We will be using the MQTT integration of Drogue IoT. This makes things easy, as 
 clusters, and still can have multiple consumers. Also, it is possible to just re-use all your tools around MQTT that
 you already may know about, for testing and debugging.
 
-== Creating a Drogue IoT cloud API key
+== Creating a Drogue IoT cloud API token
 
-In order to get access to the application through the MQTT integration, we need an OAuth token or API key. As you need
-to periodically refresh an OAuth token, and most MQTT clients have no idea about that, we choose an API key
-herefootnote:[API keys don't expire, while OAuth access tokens do. Even when you can refresh an access token using
+In order to get access to the application through the MQTT integration, we need an OAuth token or API token. As you need
+to periodically refresh an OAuth token, and most MQTT clients have no idea about that, we choose an API token
+herefootnote:[API tokens don't expire, while OAuth access tokens do. Even when you can refresh an access token using
 a refresh token, you still need to do this.].
 
-Getting a new API key currently requires to use a command line HTTP client, like HTTPie or curl. It is a simple
+Getting a new API token currently requires to use a command line HTTP client, like HTTPie or curl. It is a simple
 operation though, and we will use `drg whoami --token` to acquire a fresh OAuth token for accessing the API.
 
 The following examples require you to replace `<api-endpoint>` with the actual API endpoint. You can get this from
@@ -38,11 +38,11 @@ The API endpoint URL is located in the box "API" in the "Services" column.
 NOTE: The following examples will use the command `jq` to pretty-format that the JSON result of the commands. If can't
 use `jq`, you can also omit it as is it only used to improve readability of the result.
 
-=== Create a new API key
+=== Create a new API token
 
 [source]
 ----
-curl -vs -H "Authorization: Bearer $(drg whoami --token)" -XPOST <api-endpoint>/api/keys/v1alpha1 | jq
+curl -vs -H "Authorization: Bearer $(drg whoami --token)" -XPOST <api-endpoint>/api/tokens/v1alpha1 | jq
 ----
 
 The output should look something like:
@@ -50,21 +50,21 @@ The output should look something like:
 ----
 {
   "prefix": "drg_g0yAUq",
-  "key": "drg_g0yAUq_kwjRLA40hrt81bbKdGbcDOmlq2WASx6UyQi"
+  "token": "drg_g0yAUq_kwjRLA40hrt81bbKdGbcDOmlq2WASx6UyQi"
 }
 ----
 
-The value of the field `key` is the actual API key. You will not be able to recover this key at a later time. So
-you need to note (copy) it somewhere. The "prefix" is used to identity the key, so that you can easily delete it
+The value of the field `token` is the actual API token. You will not be able to recover this token at a later time. So
+you need to note (copy) it somewhere. The "prefix" is used to identity the token, so that you can easily delete it
 later on.
 
-=== List API keys
+=== List API tokens
 
-You can also list your existing API keys using:
+You can also list your existing API tokens using:
 
 [source]
 ----
-curl -s -H "Authorization: Bearer $(drg whoami --token)" <api-endpoint>/api/keys/v1alpha1 | jq
+curl -s -H "Authorization: Bearer $(drg whoami --token)" <api-endpoint>/api/tokens/v1alpha1 | jq
 ----
 
 Which should provide you can output like:
@@ -79,20 +79,20 @@ Which should provide you can output like:
 ]
 ----
 
-As you can see, the actual `key` is no longer part of the result.
+As you can see, the actual `token` is no longer part of the result.
 
-=== Deleting API keys
+=== Deleting API tokens
 
-If you need to delete a key, you can easily achieve this using the `DELETE` verb:
+If you need to delete a token, you can easily achieve this using the `DELETE` verb:
 
 [source]
 ----
-curl -s -H "Authorization: Bearer $(drg whoami --token)" -XDELETE <api-endpoint>/api/keys/v1alpha1/drg_g0yAUq
+curl -s -H "Authorization: Bearer $(drg whoami --token)" -XDELETE <api-endpoint>/api/tokens/v1alpha1/drg_g0yAUq
 ----
 
 === Finding your username
 
-In addition to the API key, you will also need to know your username.
+In addition to the API token, you will also need to know your username.
 
 You can check your username using the Web Console. In the top right corner of the console, you will find the user menu,
 which shows you your username:
@@ -128,7 +128,7 @@ drogue.integration.mqtt.port=443 <5>
 ----
 <1> The Drogue IoT application name
 <2> Your Drogue IoT username, as described in <<Finding your username>>
-<3> Your Drogue IoT application key, as described in <<Create a new API key>>
+<3> Your Drogue IoT application token, as described in <<Create a new API token>>
 <4> The hostname of the MQTT integration.
 <5> The port number of the MQTT integration.
 +
