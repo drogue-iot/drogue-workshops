@@ -36,9 +36,9 @@ public class Receiver {
 }
 ----
 
-<1> The receiver is a bean, which is annotated with the `@Startup` annotation, so that it does start to process events,
-even if no user has yet access the web frontend. This is required for this example, as events are already being generated
-and need to be processed by our logic, so that when a user connects to our application, which have some existing data
+<1> The receiver is a bean, which is annotated with the `@Startup` annotation, so that it starts processing events,
+even if no user has yet to access the web frontend. This is required for this example, as events are already being generated
+and need to be processed by our logic, so that when a user connects to our application, there will be some existing data
 to show.
 +
 This pattern also works in cases where you don't even have a web frontend, but an application which only processes
@@ -100,7 +100,7 @@ return device; <3>
 <3> The resulting, internal, event
 
 As the `process` method is annotated with both the `@Inbound` and `@Outbound` annotation, it will receive events but
-also forward events which are returned by the method. The event which returned, is sent on internally to the
+also forward events which are returned by the method. The event which is returned, is sent on internally to the
 event channel defined by `Channels.TELEMETRY`.
 
 == Understanding the channel mappings
@@ -222,7 +222,7 @@ public class EventsResource {
 }
 ----
 <1> The map used to keep track of all connected clients. As the bean is annotated with `@ApplicationScoped` there will
-only be once instance of it, and we can track all sessions.
+only be one instance of it, and we can track all sessions.
 <2> The last known state, preformatted for directly sending out to clients.
 <3> When a new client connects, and we have a previous state, we send it out before anything else.
 <4> The method which will receive the internal events from the `Receiver` bean.
