@@ -20,7 +20,13 @@ Additionally to the common pre-requisites, you will need:
 * Coverage for "The Things Network"
 * A "The Things Network" v3 account
 * A publicly accessible Drogue IoT Cloud instance running version 0.5+
+
+This workshop provides two backend implementations, one written in Java using
+Quarkus, and one written in JavaScript which uses Node.js. Depending on which
+backend is chosen one of the following will be required:
+
 * Standard Java development tools: Java, Maven, Git
+* Node.js version 16 or later
 
 === Supported embedded device & LoRa modem
 
