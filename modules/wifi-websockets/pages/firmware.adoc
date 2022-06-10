@@ -4,19 +4,18 @@ The next step is to compile and flash the device's firmware.
 
 == Clone the Git repository
 
-Clone the git repository with the example and check out the `0.5.0` tag:
+Clone the git repository with the workshops:
 
 [source]
 ----
-git clone https://github.com/drogue-iot/drogue-device
-git checkout 0.5.0
+git clone https://github.com/drogue-iot/drogue-workshops
 ----
 
-For the next steps, you will need to change into the sub-directory `examples/stm32l4/iot01a-wifi`:
+For the next steps, you will need to change into the sub-directory `examples/wifi-websockets-workshop`:
 
 [source]
 ----
-cd examples/stm32l4/iot01a-wifi
+cd examples/wifi-websockets-workshop
 ----
 
 IMPORTANT: If you don't use the iot01a board, you will need to adapt the firmware to match your device and
@@ -27,10 +26,12 @@ hardware configuration!
 For the device to access your WiFi network and Drogue Cloud, you must add the WiFi and device credentials to the `~/.drogue/config.toml` file:
 
 ```toml
-wifi-ssid = "..."       # The WiFi network SSID
-wifi-password = "..."   # The WiFi network pre-shared key
-http-username = "..."   # The device username (I.e. `device1@wifi-workshop`)
-http-password = "..."   # The device password (I.e. `mysecretpassword`)
+host = "http.sandbox.drogue.cloud" # Replace with your own Drogue Cloud instance if you are not using the sandbox
+port = "443"
+wifi-ssid = "..."                  # The WiFi network SSID
+wifi-password = "..."              # The WiFi network pre-shared key
+http-username = "..."              # The device username (I.e. `device1@wifi-workshop`)
+http-password = "..."              # The device password (I.e. `mysecretpassword`)
 ```
 
 == Compile and flash
@@ -41,7 +42,7 @@ IMPORTANT: You need to have the developer board attached to your computer.
 
 [source]
 ----
-DEFMT_LOG=info PROBE_RUN_CHIP=STM32L475VG cargo run --release --features b-l475e-iot01a,tls
+DEFMT_LOG=info PROBE_RUN_CHIP=STM32L475VG cargo run --release --features b-l475e-iot01a --no-default-features
 ----
 
 NOTE: You might have an IoT01A board with a different chip, e.g. `L4S5VI`. Please check your board and use appropriate
@@ -49,7 +50,7 @@ value for the `PROBE_RUN_CHIP` variable , like `PROBE_RUN_CHIP=STM32L4S5VI`:
 
 [source]
 ----
-DEFMT_LOG=info PROBE_RUN_CHIP=STM32L4S5VI cargo run --release --features b-l4s5i-iot01a,tls
+DEFMT_LOG=info PROBE_RUN_CHIP=STM32L4S5VI cargo run --release --features b-l4s5i-iot01a --no-default-features
 ----
 
 == Checking the result
@@ -59,7 +60,7 @@ board. The output should look something like this:
 
 [source,subs="verbatim,quotes"]
 ----
-     Running `probe-run target/thumbv7em-none-eabihf/release/iot01a-wifi`
+     Running `probe-run target/thumbv7em-none-eabihf/release/wifi-websockets-workshop`
 (HOST) WARN  (BUG) location info is incomplete; it will be omitted from the output
 (HOST) INFO  flashing program (164.62 KiB)
 (HOST) INFO  success!
