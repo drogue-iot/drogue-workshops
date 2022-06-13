@@ -1,0 +1,19 @@
+name: Build
+
+on:
+  push:
+    branches: [staging, trying, main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build examples
+        run: for i in $(ls examples); do D="examples/${i}"; if test -f "${D}/.skip"; then echo "Skipping $D"; else pushd $D; cargo build --release; popd; fi; done;

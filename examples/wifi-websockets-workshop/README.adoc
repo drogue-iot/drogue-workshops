@@ -1,0 +1,64 @@
+== STM32 IOT01A example
+
+This example application runs out of the box on the STM32 IOT01A development kits.  It uses the on board peripherals such as WiFi and the temperature sensor to send data to an HTTP endpoint such as Drogue Cloud.
+
+NOTE: There are multiple variants of this kit, so the example must be compiled and run using feature flags.
+
+The example can operate using plain TCP, or using TLS by enabling the `tls` feature flag.
+
+=== Prerequisites
+
+==== Hardware
+
+* STM32 IOT01A development kit
+
+==== Software
+
+* To build the example, you need to have link:https://rustup.rs/[rustup].
+* To flash the example on the device, you need `probe-run` installed (`cargo install probe-run`).
+* A Drogue Cloud instance. See link:https://github.com/drogue-iot/drogue-cloud/[drogue-cloud] for how to run that, or use the link:https://sandbox.drogue.cloud/[sandbox] (requires TLS).
+
+
+=== Configuring
+
+Credentials for your local WiFi network will come from these entries in `~/.drogue/config.toml`:
+
+....
+wifi-ssid = "..."
+wifi-password = "..."
+....
+
+HTTP authentication will come from these entries in `~/.drogue/config.toml`:
+
+....
+http-username = "..."
+http-password = "..."
+....
+
+For Drogue Cloud, the username/password is stored in this form: `device_id@application`.
+
+== Running
+
+To use this example with your own Drogue Cloud instance, you need to edit the HOST and PORT constants in `src/main.rs`.
+
+To run the firmware using a given chip:
+
+....
+DEFMT_LOG=info PROBE_RUN_CHIP=STM32L4S5VI cargo run --release --features b-l4s5i-iot01a --no-default-features
+....
+
+If you have the B-475E-IOT01A board, use the following parameters:
+
+....
+DEFMT_LOG=info PROBE_RUN_CHIP=STM32L475VG cargo run --release --features b-l475e-iot01a --no-default-features
+....
+
+Once flashed, the device will reset and attempt to join the WiFi network. If successful, it will print a message to the RTT log. You can then press the blue/user button on the board to send a test message from the device.
+
+== Troubleshooting
+
+If you’re experiencing problems, try setting the `VID:PID` values to that of your probe (you can find that from lsusb once your board is powered).
+
+....
+<ENV> cargo run <ARGS> -- --probe <VID>:<PID>
+....
