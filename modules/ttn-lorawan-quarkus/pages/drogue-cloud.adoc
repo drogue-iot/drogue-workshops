@@ -5,7 +5,8 @@ TTN integration so that application and device will be synchronized with the TTN
 
 == Create a new application
 
-Simply create a new application using `drg`:
+Simply create a new application using `drg`, enabling the the TTN integration
+for the application by adding the `.spec.ttn` section:
 
 [IMPORTANT]
 .Application name
@@ -14,15 +15,6 @@ By default, the Drogue IoT application name will also be used as the TTN applica
 in both systems. You have the ability to override the application name, when synchronizing with the TTN system. However,
 this only makes things complicated. So try to come up with a name that should still be free.
 ====
-
-[source]
-----
-drg create app my-app
-----
-
-== Enable the TTN integration for the application
-
-Add the `.spec.ttn` section to the application:
 
 [source]
 ----
