@@ -39,7 +39,7 @@ For Drogue Cloud, the username/password is stored in this form: `device_id@appli
 
 == Running
 
-To use this example with your own Drogue Cloud instance, you need to edit the HOST and PORT constants in `src/main.rs`.
+To use this example with your own Drogue Cloud instance, you need to edit the `hostname` and `port` constants in your `~/.drogue/config.toml`.
 
 To run the firmware using a given chip:
 

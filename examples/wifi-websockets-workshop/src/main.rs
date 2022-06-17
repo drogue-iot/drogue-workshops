@@ -43,6 +43,9 @@ const PASSWORD: &str = drogue::config!("http-password");
 
 #[embassy::main(config = "Iot01a::config(true)")]
 async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
+    defmt::info!("Hello, World");
+    loop {}
+    /*
     let board = Iot01a::new(p);
     let mut wifi = board.wifi;
 
@@ -106,6 +109,7 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
             }
         }
     }
+    */
 }
 
 #[embassy::task]
