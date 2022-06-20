@@ -45,7 +45,8 @@ const PASSWORD: &str = drogue::config!("http-password");
 pub fn config() -> embassy_stm32::Config {
     let enable_debug = true;
     let mut config = embassy_stm32::Config::default();
-    config.rcc.mux = ClockSrc::PLL(
+    config.rcc.mux = ClockSrc::HSI16;
+    /*
         // 16 Mhz (vs 32 Mhz)
         PLLSource::HSI16,
         PLLClkDiv::Div2,
@@ -53,7 +54,7 @@ pub fn config() -> embassy_stm32::Config {
         PLLMul::Mul12,
         Some(PLLClkDiv::Div2),
     );
-    config.rcc.ahb_pre = AHBPrescaler::Div8;
+    config.rcc.ahb_pre = AHBPrescaler::Div8;*/
     config.enable_debug_during_sleep = enable_debug;
     config
 }
