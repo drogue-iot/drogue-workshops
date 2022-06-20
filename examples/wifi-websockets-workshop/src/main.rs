@@ -23,6 +23,7 @@ use embassy::{
     time::{Duration, Ticker},
     util::select,
 };
+use embassy_stm32::rcc::*;
 use embassy_stm32::Peripherals;
 use embedded_io::{Error, ErrorKind};
 use embedded_nal_async::{AddrType, Dns, IpAddr, Ipv4Addr, SocketAddr, TcpClient};
@@ -41,7 +42,23 @@ const PORT: &str = drogue::config!("port");
 const USERNAME: &str = drogue::config!("http-username");
 const PASSWORD: &str = drogue::config!("http-password");
 
-#[embassy::main(config = "Iot01a::config(true)")]
+pub fn config() -> embassy_stm32::Config {
+    let enable_debug = true;
+    let mut config = embassy_stm32::Config::default();
+    config.rcc.mux = ClockSrc::PLL(
+        // 16 Mhz (vs 32 Mhz)
+        PLLSource::HSI16,
+        PLLClkDiv::Div2,
+        PLLSrcDiv::Div2,
+        PLLMul::Mul12,
+        Some(PLLClkDiv::Div2),
+    );
+    config.rcc.ahb_pre = AHBPrescaler::Div8;
+    config.enable_debug_during_sleep = enable_debug;
+    config
+}
+
+#[embassy::main(config = "config()")]
 async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
     let board = Iot01a::new(p);
     let mut wifi = board.wifi;
