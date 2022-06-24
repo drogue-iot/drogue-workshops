@@ -242,10 +242,14 @@ pub struct TemperatureData {
     pub hum: f32,
 }
 
-static DNS: StaticDnsResolver<'static, 2> = StaticDnsResolver::new(&[
+static DNS: StaticDnsResolver<'static, 3> = StaticDnsResolver::new(&[
     DnsEntry::new("localhost", IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1))),
     DnsEntry::new(
         "http.sandbox.drogue.cloud",
+        IpAddr::V4(Ipv4Addr::new(65, 108, 135, 161)),
+    ),
+    DnsEntry::new(
+        "http-endpoint-drogue-dev.apps.wonderful.iot-playground.org",
         IpAddr::V4(Ipv4Addr::new(65, 108, 135, 161)),
     ),
 ]);

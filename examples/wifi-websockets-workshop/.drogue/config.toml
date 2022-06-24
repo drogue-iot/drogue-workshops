@@ -1,4 +1,5 @@
 hostname = "http.sandbox.drogue.cloud"   # Replace with your own Drogue Cloud instance if you are not using the sandbox
+#hostname = "http-endpoint-drogue-dev.apps.wonderful.iot-playground.org"   # Uncomme
 port = "443"
 wifi-ssid = "..."                        # The WiFi network SSID
 wifi-password = "..."                    # The WiFi network pre-shared key
