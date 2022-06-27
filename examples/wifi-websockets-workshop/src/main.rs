@@ -168,6 +168,7 @@ where
         }
     }
     async fn send(&mut self, data: TemperatureData) -> Result<(), ErrorKind> {
+        defmt::debug!("Resolving {}:{}", self.host, self.port);
         let ip = DNS
             .get_host_by_name(self.host, AddrType::IPv4)
             .await
@@ -210,6 +211,7 @@ where
 
         match response {
             Ok(response) => {
+                defmt::info!("Response status: {:?}", response.status);
                 if response.status != http::Status::Accepted {
                     defmt::warn!("Response error: {:?}", response.status);
                     Err(ErrorKind::Other)
