@@ -88,3 +88,41 @@ If the device is sending data successfully, we can confirm that the event is pro
 On the web console, you should see the event, as received by Drogue Cloud.
 
 image:spy-workshop.png[Screenshot of event spy]
+
+
+== Troubleshooting
+
+If you’re experiencing problems, try setting the `VID:PID` values to that of your probe (you can find that from lsusb once your board is powered).
+
+[source]
+----
+<ENV> cargo run <ARGS> -- --probe <VID>:<PID>
+----
+
+Additionally, the B-L4S5I-IOT01A board can have issues with running `cargo run` multiple times, leading to errors like
+
+[source]
+----
+Error: An error with the usage of the probe occured
+
+Caused by:
+    Operation timed out
+----
+
+If you experience that, the best way to restore the board is to reconnect it and use `st-flash` utility to write any binary to it, like
+
+[source]
+----
+st-flash write ../target/thumbv7em-none-eabihf/release/wifi-websockets-workshop.d 0x8000000
+----
+
+After reconnecting the board again, you should be able to use `cargo run` again.
+
+If your application starts but reports errors like
+
+[source]
+----
+ERROR Error sending measurement
+----
+
+you can run it by using `DEFMT_LOG=trace` to get more information about the error.

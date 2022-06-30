@@ -19,6 +19,13 @@ Also see:
 
 * https://rustup.rs/[rustup homepage]
 
+You'll also need to install `nightly` toolchain with by running
+
+[source]
+----
+rustup toolchain install nightly`
+----
+
 == Install an embedded toolchain
 
 By default, `rustup` will install a toolchain (compiler, …) for your current host architecture and operating system.
@@ -37,3 +44,5 @@ You can install `probe-run` be executing the following command:
 ----
 cargo install probe-run
 ----
+
+Make sure you properly set up probe, like for example set link:https://probe.rs/docs/getting-started/probe-setup/[udev rules] on Linux to allow users without root privileges access to the debug probes as well.

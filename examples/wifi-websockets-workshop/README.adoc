@@ -4,8 +4,6 @@ This example application runs out of the box on the STM32 IOT01A development kit
 
 NOTE: There are multiple variants of this kit, so the example must be compiled and run using feature flags.
 
-The example can operate using plain TCP, or using TLS by enabling the `tls` feature flag.
-
 === Prerequisites
 
 ==== Hardware
@@ -37,6 +35,8 @@ http-password = "..."
 
 For Drogue Cloud, the username/password is stored in this form: `device_id@application`.
 
+You can find an example config file in link:.drogue/config.toml[]
+
 == Running
 
 To use this example with your own Drogue Cloud instance, you need to edit the HOST and PORT constants in `src/main.rs`.
@@ -62,3 +62,20 @@ If you’re experiencing problems, try setting the `VID:PID` values to that of y
 ....
 <ENV> cargo run <ARGS> -- --probe <VID>:<PID>
 ....
+
+Additionally, the B-L4S5I-IOT01A board can have issues with running probe multiple times, leading to errors like
+
+```
+Error: An error with the usage of the probe occured
+
+Caused by:
+    Operation timed out
+```
+
+If you experience that, the best way to restore the board is to reconnect it and use `st-flash` utility to write any binary to it, like
+
+```
+st-flash write ../target/thumbv7em-none-eabihf/release/wifi-websockets-workshop.d 0x8000000
+```
+
+After reconnecting the board again, you should be able to use `cargo run` again.
