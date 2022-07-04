@@ -174,7 +174,7 @@ where
             .await
             .map_err(|_| ErrorKind::Other)?;
 
-        defmt::debug!("Connecting to {}:{}", ip, self.port);
+        defmt::debug!("Connecting to {:?}:{}", defmt::Debug2Format(&ip), self.port);
         let connection = self
             .client
             .connect(SocketAddr::new(ip, self.port))
