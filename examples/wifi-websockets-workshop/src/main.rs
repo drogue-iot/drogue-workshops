@@ -174,6 +174,7 @@ where
             .await
             .map_err(|_| ErrorKind::Other)?;
 
+        defmt::debug!("Connecting to {}:{}", ip, self.port);
         let connection = self
             .client
             .connect(SocketAddr::new(ip, self.port))
@@ -182,6 +183,8 @@ where
 
         let mut connection: TlsConnection<'_, _, Aes128GcmSha256> =
             TlsConnection::new(connection, &mut self.tls);
+
+        defmt::debug!("Establishing TLS connection to {}", self.host);
         connection
             .open::<_, NoClock, 1>(TlsContext::new(
                 &TlsConfig::new().with_server_name(self.host),
