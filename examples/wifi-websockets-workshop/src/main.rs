@@ -9,14 +9,12 @@
 
 use drogue_device::{
     bsp::{boards::stm32l4::iot01a::*, Board},
-    traits::{sensors::temperature::TemperatureSensor, wifi::*},
+    traits::sensors::temperature::TemperatureSensor,
     *,
 };
 use drogue_device::{
     drivers::dns::{DnsEntry, StaticDnsResolver},
     drivers::sensors::hts221::Hts221,
-    network::clients::http,
-    traits::button::Button,
 };
 use embassy::util::Forever;
 use embassy::{
@@ -30,6 +28,7 @@ use embedded_nal_async::{AddrType, Dns, IpAddr, Ipv4Addr, SocketAddr, TcpClient}
 use embedded_tls::*;
 use futures::StreamExt;
 use rand_core::{CryptoRng, RngCore};
+use reqwless::*;
 use serde::{Deserialize, Serialize};
 
 use defmt_rtt as _;
@@ -61,26 +60,17 @@ pub fn config() -> embassy_stm32::Config {
 #[embassy::main(config = "config()")]
 async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
     let board = Iot01a::new(p);
-    let mut wifi = board.wifi;
-
-    match wifi.start().await {
-        Ok(()) => defmt::info!("Started..."),
-        Err(err) => defmt::info!("Error... {}", defmt::Debug2Format(&err)),
-    }
-
-    defmt::info!("Joining WiFi network...");
-    wifi.join(Join::Wpa {
-        ssid: WIFI_SSID.trim_end(),
-        password: WIFI_PSK.trim_end(),
-    })
-    .await
-    .expect("Error joining wifi");
-    defmt::info!("WiFi network joined");
 
     static NETWORK: Forever<SharedEsWifi> = Forever::new();
-    let network = NETWORK.put(SharedEsWifi::new(wifi));
+    let network = NETWORK.put(SharedEsWifi::new(board.wifi));
     let client = network.new_client().await.unwrap();
-    spawner.spawn(network_task(network)).unwrap();
+    spawner
+        .spawn(network_task(
+            network,
+            WIFI_SSID.trim_end(),
+            WIFI_PSK.trim_end(),
+        ))
+        .unwrap();
 
     let mut app = App::new(
         HOST,
@@ -100,6 +90,7 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
         "Application running. Sensor data is sent every {} seconds or when button is pressed",
         interval.as_secs()
     );
+
     loop {
         let _ = select(button.wait_released(), ticker.next()).await;
         match sensor.temperature().await {
@@ -131,8 +122,10 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
 }
 
 #[embassy::task]
-async fn network_task(adapter: &'static SharedEsWifi) {
-    adapter.run().await;
+async fn network_task(adapter: &'static SharedEsWifi, ssid: &'static str, psk: &'static str) {
+    loop {
+        let _ = adapter.run(ssid, psk).await;
+    }
 }
 
 pub struct App<'a, T, RNG>
@@ -200,19 +193,20 @@ where
 
         defmt::info!("Connected to {}:{}", self.host, self.port);
 
-        let mut client = http::HttpClient::new(&mut connection, self.host);
+        let mut client = client::HttpClient::new(&mut connection, self.host);
 
         let tx: heapless::String<128> =
             serde_json_core::ser::to_string(&data).map_err(|_| ErrorKind::Other)?;
         let mut rx_buf = [0; 1024];
         let response = client
             .request(
-                http::Request::post()
+                request::Request::post()
                     // Pass on schema
                     .path("/v1/foo?data_schema=urn:drogue:iot:temperature")
                     .basic_auth(self.username, self.password)
                     .payload(tx.as_bytes())
-                    .content_type(http::ContentType::ApplicationJson),
+                    .content_type(request::ContentType::ApplicationJson)
+                    .build(),
                 &mut rx_buf[..],
             )
             .await;
@@ -220,7 +214,7 @@ where
         match response {
             Ok(response) => {
                 defmt::info!("Response status: {:?}", response.status);
-                if response.status != http::Status::Accepted {
+                if response.status != request::Status::Accepted {
                     defmt::warn!("Response error: {:?}", response.status);
                     Err(ErrorKind::Other)
                 } else {
