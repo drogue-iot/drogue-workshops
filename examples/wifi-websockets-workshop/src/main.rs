@@ -20,7 +20,7 @@ use drogue_device::{
 };
 use embassy::util::Forever;
 use embassy::{
-    time::{Duration, Ticker},
+    time::{with_timeout, Duration, Ticker},
     util::select,
 };
 use embassy_stm32::rcc::*;
@@ -109,12 +109,17 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
                     temp: data.temperature.raw_value(),
                     hum: data.relative_humidity,
                 };
-                match app.send(payload).await {
-                    Ok(_) => {
-                        defmt::info!("Measurement sent");
-                    }
+                match with_timeout(Duration::from_secs(20), app.send(payload)).await {
+                    Ok(r) => match r {
+                        Ok(_) => {
+                            defmt::info!("Measurement sent");
+                        }
+                        Err(_) => {
+                            defmt::error!("Error sending measurement");
+                        }
+                    },
                     Err(_) => {
-                        defmt::error!("Error sending measurement");
+                        defmt::warn!("Timed out sending sensor data");
                     }
                 }
             }
