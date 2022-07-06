@@ -75,9 +75,9 @@ opt-level = 0
 overflow-checks = false
 
 [patch.crates-io]
-embassy = { git = "https://github.com/embassy-rs/embassy.git", rev = "77c7d8f31b89d13117a7294842d60f02950fdd23" }
-embassy-stm32 = { git = "https://github.com/embassy-rs/embassy.git", rev = "77c7d8f31b89d13117a7294842d60f02950fdd23" }
-embassy-embedded-hal = { git = "https://github.com/embassy-rs/embassy.git", rev = "77c7d8f31b89d13117a7294842d60f02950fdd23" }
-drogue-device = { git = "https://github.com/drogue-iot/drogue-device.git", rev = "c50b6bb2235ec52d9c9a9eb3b7f6dc9a869b805d" }
-ector = { git = "https://github.com/drogue-iot/ector.git", rev = "53a28cfed7b1030c1e841175ff8a5577251f30c8" }
+embassy = { git = "https://github.com/embassy-rs/embassy.git", rev = "6baddaf53982b75149cb7e91280c571f7fe2e7bc" }
+embassy-stm32 = { git = "https://github.com/embassy-rs/embassy.git", rev = "6baddaf53982b75149cb7e91280c571f7fe2e7bc" }
+embassy-embedded-hal = { git = "https://github.com/embassy-rs/embassy.git", rev = "6baddaf53982b75149cb7e91280c571f7fe2e7bc" }
+drogue-device = { git = "https://github.com/drogue-iot/drogue-device.git", rev = "b85713c09dbe9a4d79d0ac13a9a7a6133fa4e1c7" }
+ector = { git = "https://github.com/drogue-iot/ector.git", rev = "63c08489da17ff92c493f21411411ce5ddd6154a" }
 #drogue-device = { path = "../../../drogue-device/device" }
