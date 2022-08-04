@@ -28,7 +28,7 @@ critical-section = "0.2.5"
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde-json-core = { version = "0.4", default-features = false, features = ["heapless"] }
 rand_core = { version = "0.6.2", default-features = false }
-embedded-nal-async = { version = "0.1.0", git = "https://github.com/lulf/embedded-nal.git", rev = "7e46d533090882ce9a449f544055c09e6d241e55" }
+embedded-nal-async = "0.2.0"
 embedded-tls = { version = "0.8.0", default-features = false, features = ["async"] }
 cfg-if = "1.0.0"
 embedded-io = "0.3.0"
@@ -78,6 +78,7 @@ overflow-checks = false
 embassy = { git = "https://github.com/embassy-rs/embassy.git", rev = "6baddaf53982b75149cb7e91280c571f7fe2e7bc" }
 embassy-stm32 = { git = "https://github.com/embassy-rs/embassy.git", rev = "6baddaf53982b75149cb7e91280c571f7fe2e7bc" }
 embassy-embedded-hal = { git = "https://github.com/embassy-rs/embassy.git", rev = "6baddaf53982b75149cb7e91280c571f7fe2e7bc" }
-drogue-device = { git = "https://github.com/drogue-iot/drogue-device.git", rev = "b85713c09dbe9a4d79d0ac13a9a7a6133fa4e1c7" }
+embassy-hal-common = { git = "https://github.com/embassy-rs/embassy.git", rev = "6baddaf53982b75149cb7e91280c571f7fe2e7bc" }
+drogue-device = { git = "https://github.com/drogue-iot/drogue-device.git", rev = "fb8a9894d6c1d3871824e51b8a7665ec55127112" }
 ector = { git = "https://github.com/drogue-iot/ector.git", rev = "63c08489da17ff92c493f21411411ce5ddd6154a" }
 #drogue-device = { path = "../../../drogue-device/device" }

@@ -24,7 +24,7 @@ use embassy::{
 use embassy_stm32::rcc::*;
 use embassy_stm32::Peripherals;
 use embedded_io::{Error, ErrorKind};
-use embedded_nal_async::{AddrType, Dns, IpAddr, Ipv4Addr, SocketAddr, TcpClient};
+use embedded_nal_async::{AddrType, Dns, IpAddr, Ipv4Addr, SocketAddr, TcpConnect};
 use embedded_tls::*;
 use futures::StreamExt;
 use rand_core::{CryptoRng, RngCore};
@@ -62,8 +62,7 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
     let board = Iot01a::new(p);
 
     static NETWORK: Forever<SharedEsWifi> = Forever::new();
-    let network = NETWORK.put(SharedEsWifi::new(board.wifi));
-    let client = network.new_client().await.unwrap();
+    let network: &'static SharedEsWifi = NETWORK.put(SharedEsWifi::new(board.wifi));
     spawner
         .spawn(network_task(
             network,
@@ -77,7 +76,7 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
         PORT.parse::<u16>().unwrap(),
         USERNAME.trim_end(),
         PASSWORD.trim_end(),
-        client,
+        network,
         board.rng,
     );
     let mut sensor = Hts221::new(board.i2c2);
@@ -130,7 +129,7 @@ async fn network_task(adapter: &'static SharedEsWifi, ssid: &'static str, psk: &
 
 pub struct App<'a, T, RNG>
 where
-    T: TcpClient,
+    T: TcpConnect,
     RNG: CryptoRng + RngCore,
 {
     host: &'a str,
@@ -144,7 +143,7 @@ where
 
 impl<'a, T, RNG> App<'a, T, RNG>
 where
-    T: TcpClient,
+    T: TcpConnect,
     RNG: CryptoRng + RngCore,
 {
     fn new(
