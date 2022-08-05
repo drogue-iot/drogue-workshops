@@ -1,0 +1,54 @@
+[dependencies]
+cfg-if = '1.0.0'
+embedded-storage = '0.3.0'
+embedded-storage-async = '0.3.0'
+
+[dependencies.cortex-m]
+version = '0.7'
+
+[dependencies.cortex-m-rt]
+version = '0.7'
+
+[dependencies.defmt]
+optional = true
+version = '0.3'
+
+[dependencies.defmt-rtt]
+optional = true
+version = '0.3'
+
+[dependencies.embassy]
+default-features = false
+version = '0.1.0'
+
+[dependencies.embassy-boot]
+default-features = false
+version = '0.1.0'
+
+[dependencies.embassy-boot-stm32]
+default-features = false
+version = '0.1.0'
+
+[dependencies.embassy-stm32]
+default-features = false
+features = ['nightly']
+version = '0.1.0'
+
+[features]
+b-l475e-iot01a = ['embassy-stm32/stm32l475vg']
+b-l4s5i-iot01a = ['embassy-stm32/stm32l4s5vi']
+debug = ['defmt-rtt']
+default = ['b-l4s5i-iot01a']
+defmt = [
+    'dep:defmt',
+    'embassy-boot/defmt',
+    'embassy-boot-stm32/defmt',
+    'embassy-stm32/defmt',
+]
+
+[package]
+authors = ['Ulf Lilleengen <lulf@redhat.com>']
+description = 'Bootloader for STM32L4 iot01a boards'
+edition = '2021'
+name = 'dfu-workshop-bootloader'
+version = '0.1.0'

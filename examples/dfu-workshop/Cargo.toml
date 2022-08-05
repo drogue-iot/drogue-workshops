@@ -1,0 +1,69 @@
+[patch.crates-io.ector]
+git = 'https://github.com/drogue-iot/ector.git'
+rev = '63c08489da17ff92c493f21411411ce5ddd6154a'
+
+[patch.crates-io.embassy]
+git = 'https://github.com/embassy-rs/embassy.git'
+rev = '6baddaf53982b75149cb7e91280c571f7fe2e7bc'
+
+[patch.crates-io.embassy-boot]
+git = 'https://github.com/embassy-rs/embassy.git'
+rev = '6baddaf53982b75149cb7e91280c571f7fe2e7bc'
+
+[patch.crates-io.embassy-boot-stm32]
+git = 'https://github.com/embassy-rs/embassy.git'
+rev = '6baddaf53982b75149cb7e91280c571f7fe2e7bc'
+
+[patch.crates-io.embassy-embedded-hal]
+git = 'https://github.com/embassy-rs/embassy.git'
+rev = '6baddaf53982b75149cb7e91280c571f7fe2e7bc'
+
+[patch.crates-io.embassy-hal-common]
+git = 'https://github.com/embassy-rs/embassy.git'
+rev = '6baddaf53982b75149cb7e91280c571f7fe2e7bc'
+
+[patch.crates-io.embassy-stm32]
+git = 'https://github.com/embassy-rs/embassy.git'
+rev = '6baddaf53982b75149cb7e91280c571f7fe2e7bc'
+
+[patch.crates-io.drogue-device]
+git = 'https://github.com/drogue-iot/drogue-device.git'
+rev = 'fb8a9894d6c1d3871824e51b8a7665ec55127112'
+
+[profile.dev]
+codegen-units = 1
+debug = 2
+debug-assertions = true
+incremental = false
+opt-level = 3
+overflow-checks = true
+
+[profile.dev.build-override]
+codegen-units = 8
+debug = false
+debug-assertions = false
+opt-level = 0
+overflow-checks = false
+
+[profile.release]
+codegen-units = 1
+debug = 2
+debug-assertions = false
+incremental = false
+lto = 'fat'
+opt-level = 's'
+overflow-checks = false
+
+[profile.release.build-override]
+codegen-units = 8
+debug = false
+debug-assertions = false
+opt-level = 0
+overflow-checks = false
+
+[workspace]
+members = [
+    'bootloader',
+    'app',
+]
+resolver = '2'
