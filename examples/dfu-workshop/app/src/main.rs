@@ -37,7 +37,6 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "panic-probe")]
 use panic_probe as _;
 
-#[cfg(feature = "defmt-rtt")]
 use defmt_rtt as _;
 
 #[cfg(feature = "panic-reset")]

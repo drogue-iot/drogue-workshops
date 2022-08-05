@@ -4,11 +4,7 @@ use std::io::Write;
 use std::path::PathBuf;
 
 fn main() {
-    let memory_x = if env::var("CARGO_FEATURE_DFU").is_ok() {
-        "memory-bootloaded.x"
-    } else {
-        "memory.x"
-    };
+    let memory_x = "memory.x";
 
     // Put `memory.x` in our output directory and ensure it's
     // on the linker search path.
