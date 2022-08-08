@@ -75,6 +75,8 @@ default-features = false
 version = '0.6.2'
 
 [features]
+blue = []
+green = []
 b-l475e-iot01a = [
     'embassy-stm32/stm32l475vg',
     'drogue-device/bsp+b_l475e_iot01a',
@@ -88,6 +90,7 @@ debug = [
     'drogue-device/defmt',
     'embassy/defmt',
     'embedded-update/defmt',
+    'reqwless/defmt',
 ]
 default = [
     'b-l4s5i-iot01a',
