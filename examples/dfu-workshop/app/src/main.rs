@@ -19,6 +19,7 @@ use drogue_device::{
     drivers::dns::{DnsEntry, StaticDnsResolver},
     drogue,
 };
+use embassy::time::Timer;
 use embassy::time::{with_timeout, Duration, Ticker};
 use embassy::util::Forever;
 use embassy::util::{select, Either};
@@ -30,7 +31,6 @@ use embedded_update::{service::DrogueHttp, DeviceStatus};
 use futures::StreamExt;
 use rand_core::{CryptoRng, RngCore};
 use reqwless::*;
-use embassy::time::Timer;
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "panic-probe")]
@@ -77,7 +77,9 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
     #[cfg(not(feature = "blue"))]
     let mut led = board.led_green;
 
-    spawner.spawn(updater_task(network, board.flash, board.rng)).unwrap();
+    spawner
+        .spawn(updater_task(network, board.flash, board.rng))
+        .unwrap();
 
     // Loop blinking our LED
     loop {
@@ -109,7 +111,7 @@ async fn updater_task(network: &'static SharedEsWifi, flash: Flash<'static>, rng
         .await
         .unwrap();
 
-    let service: DrogueHttp<'_, _, _, 2048> = DrogueHttp::new(
+    let service: DrogueHttp<'_, _, _, 4096> = DrogueHttp::new(
         network,
         rng,
         SocketAddr::new(ip, PORT.parse::<u16>().unwrap()),
@@ -118,7 +120,7 @@ async fn updater_task(network: &'static SharedEsWifi, flash: Flash<'static>, rng
         PASSWORD.trim_end(),
     );
 
-    let mut device: FirmwareManager<BlockingFlash<Flash<'static>>, 4096, 1536> =
+    let mut device: FirmwareManager<BlockingFlash<Flash<'static>>, 4096, 3072> =
         FirmwareManager::new(BlockingFlash::new(flash), updater, version.as_bytes());
     let mut updater = embedded_update::FirmwareUpdater::new(
         service,
@@ -127,7 +129,6 @@ async fn updater_task(network: &'static SharedEsWifi, flash: Flash<'static>, rng
             backoff_ms: 100,
         },
     );
-
 
     loop {
         defmt::info!("Starting updater task");
