@@ -120,7 +120,7 @@ async fn updater_task(network: &'static SharedEsWifi, flash: Flash<'static>, rng
         PASSWORD.trim_end(),
     );
 
-    let mut device: FirmwareManager<BlockingFlash<Flash<'static>>, 4096, 4096> =
+    let mut device: FirmwareManager<BlockingFlash<Flash<'static>>, 2048, 4096> =
         FirmwareManager::new(BlockingFlash::new(flash), updater, version.as_bytes());
     let mut updater = embedded_update::FirmwareUpdater::new(
         service,
