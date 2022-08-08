@@ -502,6 +502,7 @@ dependencies = [
  "drogue-device",
  "embassy",
  "embassy-boot-stm32",
+ "embassy-embedded-hal",
  "embassy-stm32",
  "embedded-hal 0.2.7",
  "embedded-io",

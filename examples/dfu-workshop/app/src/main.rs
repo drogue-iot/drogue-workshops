@@ -23,6 +23,7 @@ use embassy::time::Timer;
 use embassy::time::{with_timeout, Duration, Ticker};
 use embassy::util::Forever;
 use embassy::util::{select, Either};
+use embassy_embedded_hal::adapter::BlockingAsync;
 use embassy_stm32::{flash::Flash, Peripherals};
 use embedded_io::{Error, ErrorKind};
 use embedded_nal_async::{AddrType, Dns, IpAddr, Ipv4Addr, SocketAddr, TcpConnect};
@@ -77,16 +78,52 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
     #[cfg(not(feature = "blue"))]
     let mut led = board.led_green;
 
-    spawner
-        .spawn(updater_task(network, board.flash, board.rng))
-        .unwrap();
+    #[cfg(not(feature = "blue"))]
+    {
+        spawner
+            .spawn(updater_task(network, board.flash, board.rng))
+            .unwrap();
 
-    // Loop blinking our LED
-    loop {
-        let _ = led.on();
-        Timer::after(Duration::from_millis(1000)).await;
+        // Loop blinking our LED
+        loop {
+            let _ = led.on();
+            Timer::after(Duration::from_millis(1000)).await;
+            let _ = led.off();
+            Timer::after(Duration::from_millis(1000)).await;
+        }
+    }
+
+    #[cfg(feature = "blue")]
+    {
+        // Loop blinking our LED
+        loop {
+            let _ = led.on();
+            Timer::after(Duration::from_millis(200)).await;
+            let _ = led.off();
+            Timer::after(Duration::from_millis(200)).await;
+        }
+        /*
+        static APP_B: &[u8] = include_bytes!("../b.bin");
+        let mut flash = BlockingAsync::new(board.flash);
+
+        //let mut led = Output::new(p.PB14, Level::Low, Speed::Low);
         let _ = led.off();
-        Timer::after(Duration::from_millis(1000)).await;
+
+        Timer::after(Duration::from_millis(5000)).await;
+        let mut updater = embassy_boot_stm32::FirmwareUpdater::default();
+        let mut offset = 0;
+        for chunk in APP_B.chunks(2048) {
+            let mut buf: [u8; 2048] = [0; 2048];
+            buf[..chunk.len()].copy_from_slice(chunk);
+            updater
+                .write_firmware(offset, &buf, &mut flash, 2048)
+                .await
+                .unwrap();
+            offset += chunk.len();
+        }
+        updater.update(&mut flash).await.unwrap();
+        let _ = led.on();
+        cortex_m::peripheral::SCB::sys_reset();*/
     }
 }
 

@@ -36,6 +36,10 @@ features = [
 ]
 version = '0.1.0'
 
+[dependencies.embassy-embedded-hal]
+default-features = false
+version = '0.1.0'
+
 [dependencies.embassy-boot-stm32]
 default-features = false
 version = '0.1.0'
