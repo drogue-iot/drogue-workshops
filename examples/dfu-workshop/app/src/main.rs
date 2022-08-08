@@ -84,9 +84,9 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
     // Loop blinking our LED
     loop {
         let _ = led.on();
-        Timer::after(Duration::from_millis(500)).await;
+        Timer::after(Duration::from_millis(1000)).await;
         let _ = led.off();
-        Timer::after(Duration::from_millis(500)).await;
+        Timer::after(Duration::from_millis(1000)).await;
     }
 }
 
@@ -111,7 +111,7 @@ async fn updater_task(network: &'static SharedEsWifi, flash: Flash<'static>, rng
         .await
         .unwrap();
 
-    let service: DrogueHttp<'_, _, _, 4096> = DrogueHttp::new(
+    let service: DrogueHttp<'_, _, _, 5120> = DrogueHttp::new(
         network,
         rng,
         SocketAddr::new(ip, PORT.parse::<u16>().unwrap()),
@@ -120,7 +120,7 @@ async fn updater_task(network: &'static SharedEsWifi, flash: Flash<'static>, rng
         PASSWORD.trim_end(),
     );
 
-    let mut device: FirmwareManager<BlockingFlash<Flash<'static>>, 4096, 3072> =
+    let mut device: FirmwareManager<BlockingFlash<Flash<'static>>, 4096, 4096> =
         FirmwareManager::new(BlockingFlash::new(flash), updater, version.as_bytes());
     let mut updater = embedded_update::FirmwareUpdater::new(
         service,
