@@ -16,9 +16,9 @@ use drogue_device::{
     *,
 };
 use drogue_device::{
-    firmware::BlockingFlash,
     drivers::dns::{DnsEntry, StaticDnsResolver},
     drogue,
+    firmware::BlockingFlash,
 };
 use embassy::time::Timer;
 use embassy::time::{with_timeout, Duration, Ticker};
@@ -29,7 +29,10 @@ use embassy_stm32::{flash::Flash, Peripherals};
 use embedded_io::{Error, ErrorKind};
 use embedded_nal_async::{AddrType, Dns, IpAddr, Ipv4Addr, SocketAddr, TcpConnect};
 use embedded_tls::*;
-use embedded_update::{service::{InMemory, DrogueHttp}, DeviceStatus};
+use embedded_update::{
+    service::{DrogueHttp, InMemory},
+    DeviceStatus,
+};
 use futures::StreamExt;
 use rand_core::{CryptoRng, RngCore};
 use reqwless::*;
@@ -83,9 +86,9 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
         // Loop blinking our LED
         loop {
             let _ = led.on();
-            Timer::after(Duration::from_millis(200)).await;
+            Timer::after(Duration::from_millis(1000)).await;
             let _ = led.off();
-            Timer::after(Duration::from_millis(200)).await;
+            Timer::after(Duration::from_millis(1000)).await;
         }
     }
 }
@@ -99,7 +102,6 @@ async fn network_task(adapter: &'static SharedEsWifi, ssid: &'static str, psk: &
 
 #[embassy::task]
 async fn updater_task(network: &'static SharedEsWifi, flash: Flash<'static>, rng: Rng) {
-
     use drogue_device::firmware::BlockingFlash;
     use embassy::time::{Delay, Timer};
 
