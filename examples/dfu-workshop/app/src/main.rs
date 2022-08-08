@@ -16,6 +16,7 @@ use drogue_device::{
     *,
 };
 use drogue_device::{
+    firmware::BlockingFlash,
     drivers::dns::{DnsEntry, StaticDnsResolver},
     drogue,
 };
@@ -28,7 +29,7 @@ use embassy_stm32::{flash::Flash, Peripherals};
 use embedded_io::{Error, ErrorKind};
 use embedded_nal_async::{AddrType, Dns, IpAddr, Ipv4Addr, SocketAddr, TcpConnect};
 use embedded_tls::*;
-use embedded_update::{service::DrogueHttp, DeviceStatus};
+use embedded_update::{service::{InMemory, DrogueHttp}, DeviceStatus};
 use futures::StreamExt;
 use rand_core::{CryptoRng, RngCore};
 use reqwless::*;
@@ -80,36 +81,33 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
 
     #[cfg(not(feature = "blue"))]
     {
+        let version = FIRMWARE_REVISION.unwrap_or(FIRMWARE_VERSION);
         spawner
             .spawn(updater_task(network, board.flash, board.rng))
             .unwrap();
 
-        // Loop blinking our LED
-        loop {
-            let _ = led.on();
-            Timer::after(Duration::from_millis(1000)).await;
-            let _ = led.off();
-            Timer::after(Duration::from_millis(1000)).await;
-        }
-    }
-
-    #[cfg(feature = "blue")]
-    {
-        // Loop blinking our LED
-        loop {
-            let _ = led.on();
-            Timer::after(Duration::from_millis(200)).await;
-            let _ = led.off();
-            Timer::after(Duration::from_millis(200)).await;
-        }
         /*
-        static APP_B: &[u8] = include_bytes!("../b.bin");
-        let mut flash = BlockingAsync::new(board.flash);
-
-        //let mut led = Output::new(p.PB14, Level::Low, Speed::Low);
         let _ = led.off();
 
         Timer::after(Duration::from_millis(5000)).await;
+
+        let mut updater = embassy_boot_stm32::FirmwareUpdater::default();
+        let mut device: FirmwareManager<BlockingFlash<Flash<'static>>, 2048, 4096> =
+            FirmwareManager::new(BlockingFlash::new(board.flash), updater, version.as_bytes());
+
+        device.start(version.as_bytes()).await.unwrap();
+        let mut offset: usize = 0;
+        for chunk in APP_B.chunks(5120) {
+            let mut buf: [u8; 5120] = [0; 5120];
+            buf[..chunk.len()].copy_from_slice(chunk);
+           device 
+                .write(offset as u32, &buf)
+                .await
+                .unwrap();
+            offset += chunk.len();
+        }
+        device.update(&[0], &[1]).await.unwrap();
+
         let mut updater = embassy_boot_stm32::FirmwareUpdater::default();
         let mut offset = 0;
         for chunk in APP_B.chunks(2048) {
@@ -123,7 +121,19 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
         }
         updater.update(&mut flash).await.unwrap();
         let _ = led.on();
-        cortex_m::peripheral::SCB::sys_reset();*/
+        cortex_m::peripheral::SCB::sys_reset()
+    */
+    }
+
+    #[cfg(feature = "blue")]
+    {
+        // Loop blinking our LED
+        loop {
+            let _ = led.on();
+            Timer::after(Duration::from_millis(200)).await;
+            let _ = led.off();
+            Timer::after(Duration::from_millis(200)).await;
+        }
     }
 }
 
@@ -136,6 +146,8 @@ async fn network_task(adapter: &'static SharedEsWifi, ssid: &'static str, psk: &
 
 #[embassy::task]
 async fn updater_task(network: &'static SharedEsWifi, flash: Flash<'static>, rng: Rng) {
+
+    //static APP_B: &[u8] = include_bytes!("../b.bin");
     use drogue_device::firmware::BlockingFlash;
     use embassy::time::{Delay, Timer};
 
@@ -148,7 +160,8 @@ async fn updater_task(network: &'static SharedEsWifi, flash: Flash<'static>, rng
         .await
         .unwrap();
 
-    let service: DrogueHttp<'_, _, _, 5120> = DrogueHttp::new(
+    //let service = InMemory::new("0.2.0".as_bytes(), APP_B);
+    let service: DrogueHttp<'_, _, _, 4096> = DrogueHttp::new(
         network,
         rng,
         SocketAddr::new(ip, PORT.parse::<u16>().unwrap()),
