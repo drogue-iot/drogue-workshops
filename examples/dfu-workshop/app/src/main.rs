@@ -82,7 +82,7 @@ async fn main(spawner: embassy::executor::Spawner, p: Peripherals) {
 
     #[cfg(feature = "blue")]
     {
-        let mut led = board.led_green;
+        let mut led = board.led_blue;
         // Loop blinking our LED
         loop {
             let _ = led.on();
@@ -104,15 +104,14 @@ async fn network_task(adapter: &'static SharedEsWifi, ssid: &'static str, psk: &
 async fn updater_task(network: &'static SharedEsWifi, flash: Flash<'static>, rng: Rng) {
     use drogue_device::firmware::BlockingFlash;
     use embassy::time::{Delay, Timer};
-
-    let version = FIRMWARE_REVISION.unwrap_or(FIRMWARE_VERSION);
-    defmt::info!("Running firmware version {}", version);
-    let updater = embassy_boot_stm32::FirmwareUpdater::default();
-
     let ip = DNS
         .get_host_by_name(HOST.trim_end(), AddrType::IPv4)
         .await
         .unwrap();
+
+    let version = FIRMWARE_REVISION.unwrap_or(FIRMWARE_VERSION);
+    defmt::info!("Running firmware version {}", version);
+    let updater = embassy_boot_stm32::FirmwareUpdater::default();
 
     let service: DrogueHttp<'_, _, _, 5120> = DrogueHttp::new(
         network,
