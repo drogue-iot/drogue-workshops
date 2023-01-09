@@ -29,12 +29,47 @@ in `$HOME/.drogue/config.toml`:
 
 [source]
 ----
-app-qui = "<The Application EUI>"
+app-eui = "<The Application EUI>"
 dev-eui = "<The Device EUI>"
 app-key = "<The Application Key>"
 ----
 
+Next create a directory under `lora-discovery` named `config`
+[source]
+----
+mkdir -p config
+----
+
+and create three files therein named
+
+[source]
+----
+app_eui.txt
+app_key.txt
+dev_eui.txt
+----
+
+each containing the associated key from above.
+
+NOTE: Put only the key values. For example, the `dev_eui` file may contain `63C91E0D1F357A7B`, not `dev-eui=63C91E0D1F357A7B`.
+
 == Compile and flash
+
+You must update your toolchain configuration to specify the chip variant you are using. Consult your developer board documentation to determine which chip you have. Update `drogue-device/examples/stm32l0xx/.cargo/config` accordingly. For instance, if you have a STM32L072CZY6TR chip, you would update as follows:
+[source]
+----
+[unstable]
+build-std = ["core"]
+
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
+runner = "probe-run --chip STM32L072CZYx"
+
+...
+----
+
+NOTE: To see all of the STM32L072CZ variants supported by probe-run use `probe-run --list-chips | grep STM32L072CZ`.
+
+The firmware is configured to use 'EU868' as the default region. If you are in another part of the world, you may need to modify `examples/stm32l0xx/lora-discovery/src/main.rs` accordingly. For instance, in the United States, look for `.region(LoraRegion::EU868)` and replace it with `.region(LoraRegion::US915)`. The LoraRegion enum, and therefore all your possible choices, is defined in `device/src/traits/lora/types.rs`.
 
 You can now compile and flash the firmware. Execute the following command:
 
@@ -51,7 +86,7 @@ you can try running the following.
 [source]
 ----
 cargo build --release
-probe-run target/thumbv6m-none-eabi/release/lora-discovery --connect-under-reset --chip STM32L072CZ
+probe-run target/thumbv6m-none-eabi/release/lora-discovery --connect-under-reset --chip STM32L072CZYx
 ----
 
 == Checking the result
